@@ -13,10 +13,10 @@
     function encrypt(string $str): string {
         $ini = parse_ini_file('config.ini');
         $key_encrypt = $ini['key_encrypt'];
-        if (mb_strlen($key_encrypt, '8bit') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+        if (mb_strlen($key_encrypt, '8bit') !== 32) {
             echo "<script>console.log('Key error');</script>";
         }
-        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $nonce = random_bytes(24);
 
         $cipher = base64_encode(
             $nonce.
@@ -35,8 +35,8 @@
         $ini = parse_ini_file('config.ini');
         $key_encrypt = $ini['key_encrypt'];
         $decoded = base64_decode($str_encrypt);
-        $nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
-        $ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+        $nonce = mb_substr($decoded, 0, 24, '8bit');
+        $ciphertext = mb_substr($decoded, 24, null, '8bit');
 
         $plain = sodium_crypto_secretbox_open(
             $ciphertext,
