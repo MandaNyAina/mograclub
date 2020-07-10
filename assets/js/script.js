@@ -1,0 +1,18 @@
+import '../js/jquery.js';
+import '../bootstrap/js/bootstrap.js';
+import '../fontawesome/js/all.js';
+import '../fontawesome/js/fontawesome.js';
+import '../fontawesome/js/brands.js';
+import '../fontawesome/js/regular.js';
+import '../fontawesome/js/solid.js';
+import '../animate/js/css3-animate-it.js';
+import '../angular/angular/angular.js';
+import '../angular/angular/angular-animate.js';
+import '../angular/angular/angular-messages.js';
+import '../angular/angular/angular-route.js';
+import '../js/app.module.js';
+import '../js/app.directive.js';
+import '../js/app.controller.js';
+import '../js/app.config.js';
+import '../js/app.service.js';
+document.getElementsByTagName("body")[0].setAttribute("ng-app","myApp");
