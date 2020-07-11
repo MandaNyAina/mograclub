@@ -7,48 +7,20 @@
     // Load Composer's autoloader
     require 'phpmailer/vendor/autoload.php';
     $config = parse_ini_file('config.ini');
-    
     $database = new Database($config['db_host'],$config['db_name'],$config['db_user'],$config['db_password']);
-    session_start();
-    function encrypt(string $str): string {
+    session_start(); 
+    function encrypt(string $str) {
         $ini = parse_ini_file('config.ini');
         $key_encrypt = $ini['key_encrypt'];
-        if (mb_strlen($key_encrypt, '8bit') !== 32) {
-            echo "<script>console.log('Key error');</script>";
-        }
-        $nonce = random_bytes(24);
-
-        $cipher = base64_encode(
-            $nonce.
-            sodium_crypto_secretbox(
-                $str,
-                $nonce,
-                $key_encrypt
-            )
-        );
-        sodium_memzero($str);
-        sodium_memzero($key_encrypt);
-        return $cipher;
+        $encrypted_string = openssl_encrypt($str, "AES-128-CTR", $key_encrypt, 0, '8565825542115032'); 
+        return $encrypted_string;
     }
 
     function decrypt(string $str_encrypt): string {   
         $ini = parse_ini_file('config.ini');
         $key_encrypt = $ini['key_encrypt'];
-        $decoded = base64_decode($str_encrypt);
-        $nonce = mb_substr($decoded, 0, 24, '8bit');
-        $ciphertext = mb_substr($decoded, 24, null, '8bit');
-
-        $plain = sodium_crypto_secretbox_open(
-            $ciphertext,
-            $nonce,
-            $key_encrypt
-        );
-        if (!is_string($plain)) {
-            echo "<script>console.log('Invalid value');</script>";
-        }
-        sodium_memzero($ciphertext);
-        sodium_memzero($key_encrypt);
-        return $plain;
+        $decrypted_string = openssl_decrypt ($str_encrypt, "AES-128-CTR", $key_encrypt, 0, '8565825542115032');
+        return $decrypted_string; 
     }
 
     function randomValue(int $length, bool $specialChar = false) {
