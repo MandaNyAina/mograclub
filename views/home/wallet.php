@@ -19,7 +19,7 @@
         <div class="bg-light mt-5 p-3 w-75 text-center mx-auto" style="font-weight: 25px;" ng-if="selected == 'c'">
             You have {{balanceValue}} <i class="fas fa-rupee-sign"></i> in your wallet <br>
             <a ng-click="choiceMenu('')" class="btn btn-warning btn-sm mt-3" href="#!/recharge">Add <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-            <button class="btn btn-warning btn-sm mt-3" data-toggle="modal" data-target="#exampleModalCenter">Withdrawal</button>
+            <button class="btn btn-warning btn-sm mt-3" data-toggle="modal" data-target="#exampleModalCenter1">Withdrawal</button>
         </div>
 
         <div ng-if="selected == 'h'">
@@ -43,7 +43,7 @@
                 ?>
             </table>
         </div>
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">

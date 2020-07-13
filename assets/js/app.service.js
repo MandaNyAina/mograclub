@@ -2,9 +2,12 @@ import {app} from '../js/app.module.js';
 
 const key = "SFkqSL99qLk9SSeYL9kqeS9L3eS99q39"
 const host_protocole = "http://"
-const host_server = "mogra.club"
+const host_server = "localhost:8000"
 
 app.service('userService', function ($http) {
+    this.activeProme = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/activePromotion.php?id=${id}&key=${key}`);
+    }
     this.getBalance = (id) => {
         return $http.get(`${host_protocole}${host_server}/api/user.php?id=${id}&key=${key}`);
     }
@@ -32,6 +35,12 @@ app.service('userService', function ($http) {
 })
 
 app.service('appService', function ($http) {
+    this.convertBonus = (id, data) => {
+        return $http.post(`${host_protocole}${host_server}/api/convertBonus.php?key=${key}&id=${id}`,data);
+    }
+    this.checkPlaying = (id, groups) => {
+        return $http.get(`${host_protocole}${host_server}/api/checkPlay.php?key=${key}&groups=${groups}&id=${id}`);
+    }
     this.sendMail = (data) => {
         return $http.post(`${host_protocole}${host_server}/api/mailing.php?key=${key}`,data);
     }
@@ -50,11 +59,20 @@ app.service('appService', function ($http) {
     this.adjust = (groups, period, win, num) => {
         return $http.get(`${host_protocole}${host_server}/api/micmac.php?key=${key}&groups=${groups}&period=${period}&winC=${win}&winN=${num}`);
     }
-    this.getAll = (groups,pages) => {
-        return $http.get(`${host_protocole}${host_server}/api/getalldone.php?key=${key}&groups=${groups}`);
+    this.prepare = (groups) => {
+        return $http.post(`${host_protocole}${host_server}/api/prepare.php?key=${key}&groups=${groups}`);
     }
-    this.randomize = (groups) => {
-        return $http.post(`${host_protocole}${host_server}/api/generate.php?key=${key}&groups=${groups}`);
+    this.getAllPrepare = (groups) => {
+        return $http.get(`${host_protocole}${host_server}/api/getalldone.php?key=${key}&groups=${groups}&choice=prepare`);
+    }
+    this.getAllPrime = (groups) => {
+        return $http.get(`${host_protocole}${host_server}/api/getalldone.php?key=${key}&groups=${groups}&choice=prime`);
+    }
+    this.getAllFinal = (groups) => {
+        return $http.get(`${host_protocole}${host_server}/api/getalldone.php?key=${key}&groups=${groups}&choice=final`);
+    }
+    this.randomize = (groups, period) => {
+        return $http.post(`${host_protocole}${host_server}/api/generate.php?key=${key}&groups=${groups}&period=${period}`);
     }
     this.sendOrdering = (id, data) => {
         return $http.post(`${host_protocole}${host_server}/api/ordering.php?id=${id}&key=${key}&service=ordering`,data);
@@ -62,11 +80,11 @@ app.service('appService', function ($http) {
     this.validateOrdering = (id, data) => {
         return $http.post(`${host_protocole}${host_server}/api/ordering.php?id=${id}&key=${key}&service=validate`,data);
     }
-    this.getCurrentOrder = (id) => {
-        return $http.get(`${host_protocole}${host_server}/api/order.php?id=${id}&key=${key}&options=current`);
+    this.getCurrentOrder = (id,group) => {
+        return $http.get(`${host_protocole}${host_server}/api/order.php?id=${id}&key=${key}&options=current&groups=${group}`);
     }
-    this.getHistoryOrder = (id) => {
-        return $http.get(`${host_protocole}${host_server}/api/order.php?id=${id}&key=${key}&options=history`);
+    this.getHistoryOrder = (id,group) => {
+        return $http.get(`${host_protocole}${host_server}/api/order.php?id=${id}&key=${key}&options=history&groups=${group}`);
     }
 })
 
@@ -77,6 +95,9 @@ app.service('convertService', function ($http) {
 })
 
 app.service('adminService', function ($http) {
+    this.transfertAdmin = () => {
+        return $http.get(`${host_protocole}${host_server}/api/transfertAdmin.php?key=${key}`);
+    }
     this.getDataOrder = () => {
         return $http.get(`${host_protocole}${host_server}/api/order.php?key=${key}`);
     }

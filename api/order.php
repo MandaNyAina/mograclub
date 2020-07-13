@@ -5,11 +5,12 @@
     $value = floatval(json_decode($postdata));
     if (is_form_valid(@$_GET['id']) && is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
         $id = $_GET['id'];
+        $groups = $_GET['groups'];
         if ($_GET["options"] == "current") {
-            $row = $database->selectMore("t_order","*","id_user='$id' and status='current'");
+            $row = $database->selectMore("t_order","*","id_user='$id' and status='current' and groups='$groups'");
             echo json_encode($row);
         } if ($_GET["options"] == "history") {
-            $row = $database->selectMore("t_order","*","id_user='$id' and status='done'");
+            $row = $database->selectMore("t_order","*","id_user='$id' and status='done' and groups='$groups'");
             echo json_encode($row);
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {

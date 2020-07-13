@@ -96,10 +96,10 @@
 </head>
 <body ng-controller="appCtrl">
     <div class="w-100 bg-light" style="height: 27vh;background-image: url(../../assets/images/bannier.jpg);background-size: cover;background-repeat: no-repeat;background-position: center;">
-        <span style="border-radius: 0px 0px 10px 0px;opacity: 0.9;" class="bg-light pl-3 pr-3 pt-2 pb-2 text-dark">{{fname}}</span>
+        <span style="border-radius: 0px 0px 10px 0px;opacity: 0.9;" class="bg-light pl-3 pr-3 pt-2 pb-2 text-dark" ng-bind="fname">Loading ... </span>
         <a class="btn btn-primary btn-sm" ng-click="choiceMenu('')" href="#!/"><i class="fa fa-user-circle" aria-hidden="true"></i></i></a>
         <div class="text-light wrapper">
-            <span style="border-radius: 10px;opacity: 0.9;" class="bg-light pl-3 pr-3 pt-2 pb-2 text-dark"><i class="fas fa-award text-success"></i> Balance : {{balanceValue}}</span>
+            <span style="border-radius: 10px;opacity: 0.9;" class="bg-light pl-3 pr-3 pt-2 pb-2 text-dark"><i class="fas fa-award text-success"></i> Balance : <span ng-bind="balanceValue">Loading ...</span></span>
             <a ng-click="choiceMenu('')" class="btn btn-warning btn-sm" href="#!/recharge">Recharge</a>
             <button class="btn btn-warning btn-sm" type="button" data-toggle="modal" data-target="#exampleModalCenter">Rules</button>
             <div class="float-right mt-4">
@@ -133,7 +133,7 @@
         <hr>
         <ol>
             <li>
-                There are only three (3) colours. They are Green, Orange and Violet.
+                There are only three (3) colours. They are Green, Orange and Tin.
             </li>
             <li>
                 The total contract time is two minutes and forty five seconde (2:45), in last thirthy 
@@ -163,23 +163,23 @@
                 Joing Orange - (2, 4, 6, 8), show in result, you get (98 x 2 = 196), (9 x 1.8 = 16.2)
             </li>
             <li>
-                Violet colour comes only with green or orange
+                TIN colour comes only with green or orange
             </li>
             <li>
-                When violet colour comes with green or orange, the profit change as respective
+                When TIN colour comes with green or orange, the profit change as respective
                 <ul>
                     <li>
-                        If a person select green when it comes with violet, <br>
-                        [less than 100 = 98 x 1.25 = 122,5] - [more than 100, 200 = 196 x 1.4 = 274,4]
+                        If a person select green when it comes with TIN, <br>
+                        [less than 100 = 98 x 1.25 = 122.5] - [more than 100, 200 = 196 x 1.4 = 274.4]
                     </li>
                     <li>
-                        If a person select orange when it comes with violet, <br>
-                        [less than 100 = 98 x 1.25 = 122,5] - [more than 100, 200 = 196 x 1.4 = 274,4]
+                        If a person select orange when it comes with TIN, <br>
+                        [less than 100 = 98 x 1.25 = 122.5] - [more than 100, 200 = 196 x 1.4 = 274.4]
                     </li>
                 </ul>
             </li>
             <li>
-                When a person select violet directely when it comes either with orange/green, he/she get the
+                When a person select TIN directely when it comes either with orange/green, he/she get the
                 highest profit <br>
                 (Less than 100 <i class="fa fa-caret-right" aria-hidden="true"></i> 49 x 2.8 = 137.2) <br>
                 (More than 100 <i class="fa fa-caret-right" aria-hidden="true"></i> 196 x 4.5 = 882)
@@ -190,7 +190,7 @@
                 profit is 10 x 5 = 50), so the profit is 5 times
             </li>
             <li>
-                At last player can select either one colour (green/ orange), he can also select violet simultanious
+                At last player can select either one colour (green/ orange), he can also select TIN simultanious
                 per contract. <br>
                 A player can select 3 numbers per contract.
             </li>

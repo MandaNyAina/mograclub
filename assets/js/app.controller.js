@@ -17,7 +17,7 @@ function time_out () {
     let h = date.getHours(),
         m = date.getMinutes(),
         s = date.getSeconds();
-    
+
     let init_m = 2,
         init_s = 46
 
@@ -149,8 +149,10 @@ app.controller('registreCtrl', ($scope, registerService) => {
         console.log(e);
     }
 })
-  
+
 app.controller('appCtrl', (userService, appService, $scope, $location, $routeParams) => {
+    $scope.navigateOrder = 0
+    const myGroup = ["AGATE","BERYL","CELESTINE","DIAMOND","EMERALD","FLINT"];
     $scope.list = [];
     $scope.agateList = [];
     $scope.berylList = [];
@@ -165,14 +167,31 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
     $scope.emeraldPart = [];
     $scope.flintPart = [];
     $scope.moreData = [];
-    $scope.currentOrder = [];
-    $scope.historyOrder = [];
+    $scope.currentOrderA = [];
+    $scope.historyOrderA = [];
+    $scope.currentOrderB = [];
+    $scope.historyOrderB = [];
+    $scope.currentOrderC = [];
+    $scope.historyOrderC = [];
+    $scope.currentOrderD = [];
+    $scope.historyOrderD = [];
+    $scope.currentOrderE = [];
+    $scope.historyOrderE = [];
+    $scope.currentOrderF = [];
+    $scope.historyOrderF = [];
     $scope.pages = 0;
     $scope.contract = 10;
     $scope.bet = 1;
     $scope.confirmCondition = false;
     $scope.navigateOrder = 0;
+    $scope.period_A = "";
+    $scope.period_B = "";
+    $scope.period_C = "";
+    $scope.period_D = "";
+    $scope.period_E = "";
+    $scope.period_F = "";
     $scope.changeColor = (attr,color,cond) => {
+        $scope.navigateOrder = 0
         $scope.contract = 10;
         $scope.bet = 1;
         $scope.confirmCondition = false;
@@ -181,24 +200,51 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
         unSelectNumberAll(attr,color,cond);
         document.getElementById(cond).checked = false;
     }
+
+    // ------------------------------------GAMING DELIMITATION BEGIN----------------------------------
+
+    let numberWinner = [], colorWinner = [], myPeriod = [], i;
     $scope.play = (data) => {
         let amount = (data.bet * data.contract)
-        // console.log(amount)
-        if ($scope.balanceValue > amount) {
-            // the service fee here
-            if (amount < 50) {
-                amount = amount - 1;
-                appService.sendServiceFee(1);
-            } else {
-                amount = amount - 2;
-                appService.sendServiceFee(2);
-            }
-            data.amount = amount;
-            appService.sendOrdering(data.id, data).then(
+        if ($scope.min > 0 || ($scope.min == 0 && $scope.sec > 30)) {
+            appService.checkPlaying(data.id, data.groups).then(
                 (res) => {
-                    console.log(res);
-                    if (res.data == "Send Done") {
-                        loadUserInfo();
+                    if (res.data == "ok") {
+                        if ($scope.balanceValue > amount) {
+                            // the service fee here
+                            if (amount < 50) {
+                                amount = amount - 1;
+                                appService.sendServiceFee(1);
+                            } else {
+                                amount = amount - 2;
+                                appService.sendServiceFee(2);
+                            }
+                            data.amount = amount;
+                            appService.sendOrdering(data.id, data).then(
+                                (res) => {
+                                    console.log(res);
+                                    if (res.data == "Send Done") {
+                                        loadUserInfo();
+                                    }
+                                }
+                            )
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                text: 'Your balance is low',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    } else {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            text: 'You cannot bet, the maximum bet is only 3 for each group',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                     }
                 }
             )
@@ -206,12 +252,316 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
-                text: 'Your balance is low',
+                text: 'Time out',
                 showConfirmButton: false,
                 timer: 1500
             })
         }
     }
+
+    const prepare = () => {
+        myGroup.map(gp => {
+            appService.prepare(gp).then(
+                (res) => {
+                    switch (gp) {
+                        case "AGATE":
+                            $scope.period_A = res.data;
+                            break;
+                        case "BERYL":
+                            $scope.period_B = res.data;
+                            break;
+                        case "CELESTINE":
+                            $scope.period_C = res.data;
+                            break;
+                        case "DIAMOND":
+                            $scope.period_D = res.data;
+                            break;
+                        case "EMERALD":
+                            $scope.period_E = res.data;
+                            break;
+                        case "FLINT":
+                            $scope.period_F = res.data;
+                            break;
+                    }
+                }
+            )
+        })
+    }
+
+    const randomize = () => {
+        appService.randomize(myGroup[0],$scope.period_A).then(
+            res => {
+                colorWinner[$scope.period_A] = res.data.result
+                numberWinner[$scope.period_A] = res.data.result
+            }
+
+        )
+        appService.randomize(myGroup[1],$scope.period_B).then(
+            res => {
+                colorWinner[$scope.period_B] = res.data.result
+                numberWinner[$scope.period_B] = res.data.result
+            }
+
+        )
+        appService.randomize(myGroup[2],$scope.period_C).then(
+            res => {
+                colorWinner[$scope.period_C] = res.data.result
+                numberWinner[$scope.period_C] = res.data.result
+            }
+
+        )
+        appService.randomize(myGroup[3],$scope.period_D).then(
+            res => {
+                colorWinner[$scope.period_D] = res.data.result
+                numberWinner[$scope.period_D] = res.data.result
+            }
+
+        )
+        appService.randomize(myGroup[4],$scope.period_E).then(
+            res => {
+                colorWinner[$scope.period_E] = res.data.result
+                numberWinner[$scope.period_E] = res.data.result
+            }
+
+        )
+        appService.randomize(myGroup[5],$scope.period_F).then(
+            res => {
+                colorWinner[$scope.period_F] = res.data.result
+                numberWinner[$scope.period_F] = res.data.result
+            }
+
+        )
+    }
+
+    const adjust = () => {
+        myPeriod = [$scope.period_A,$scope.period_B,$scope.period_C,$scope.period_D,$scope.period_E,$scope.period_F];
+        i = 0;
+        myPeriod.map(pd => {
+            appService.adjust(myGroup[i],pd,colorWinner[pd],numberWinner[pd]).then(
+                (res) => {
+                    colorWinner[pd] = res.data.row.result;
+                    numberWinner[pd] = res.data.row.number;
+                    console.log(res)
+                }
+            )
+            i++;
+        })
+    }
+
+    const getAllPrime = () => {
+        let part = [];
+        myGroup.map(gp => {
+            appService.getAllPrime(gp).then(
+                (res) => {
+                    part = [];
+                    moreCharge();
+                    switch (gp) {
+                        case "AGATE":
+                            $scope.agateList = res.data;
+                            $scope.agateList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.agateList[i] != undefined) {
+                                    part.push($scope.agateList[i]);
+                                }
+                            }
+                            $scope.agatePart = part;
+                            break;
+                        case "BERYL":
+                            $scope.berylList = res.data;
+                            $scope.berylList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.berylList[i] != undefined) {
+                                    part.push($scope.berylList[i]);
+                                }
+                            }
+                            $scope.berylPart = part;
+                            break;
+                        case "CELESTINE":
+                            $scope.celestineList = res.data;
+                            $scope.celestineList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.celestineList[i] != undefined) {
+                                    part.push($scope.celestineList[i]);
+                                }
+                            }
+                            $scope.celestinePart = part;
+                            break;
+                        case "DIAMOND":
+                            $scope.diamondList = res.data;
+                            $scope.diamondList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.diamondList[i] != undefined) {
+                                    part.push($scope.diamondList[i]);
+                                }
+                            }
+                            $scope.diamondPart = part;
+                            break;
+                        case "EMERALD":
+                            $scope.emeraldList = res.data;
+                            $scope.emeraldList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.emeraldList[i] != undefined) {
+                                    part.push($scope.emeraldList[i]);
+                                }
+                            }
+                            $scope.emeraldPart = part;
+                            break;
+                        case "FLINT":
+                            $scope.flintList = res.data;
+                            $scope.flintList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.flintList[i] != undefined) {
+                                    part.push($scope.flintList[i]);
+                                }
+                            }
+                            $scope.flintPart = part;
+                            break;
+                    }
+                }
+            )
+        })
+    }
+
+    const getAll = () => {
+        let part = [];
+        myGroup.map(gp => {
+            appService.getAllFinal(gp).then(
+                (res) => {
+                    part = [];
+                    moreCharge();
+                    switch (gp) {
+                        case "AGATE":
+                            $scope.agateList = res.data;
+                            $scope.agateList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.agateList[i] != undefined) {
+                                    part.push($scope.agateList[i]);
+                                }
+                            }
+                            $scope.agatePart = part;
+                            break;
+                        case "BERYL":
+                            $scope.berylList = res.data;
+                            $scope.berylList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.berylList[i] != undefined) {
+                                    part.push($scope.berylList[i]);
+                                }
+                            }
+                            $scope.berylPart = part;
+                            break;
+                        case "CELESTINE":
+                            $scope.celestineList = res.data;
+                            $scope.celestineList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.celestineList[i] != undefined) {
+                                    part.push($scope.celestineList[i]);
+                                }
+                            }
+                            $scope.celestinePart = part;
+                            break;
+                        case "DIAMOND":
+                            $scope.diamondList = res.data;
+                            $scope.diamondList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.diamondList[i] != undefined) {
+                                    part.push($scope.diamondList[i]);
+                                }
+                            }
+                            $scope.diamondPart = part;
+                            break;
+                        case "EMERALD":
+                            $scope.emeraldList = res.data;
+                            $scope.emeraldList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.emeraldList[i] != undefined) {
+                                    part.push($scope.emeraldList[i]);
+                                }
+                            }
+                            $scope.emeraldPart = part;
+                            break;
+                        case "FLINT":
+                            $scope.flintList = res.data;
+                            $scope.flintList.reverse();
+                            for (let i = 0; i < 10;i++) {
+                                if ($scope.flintList[i] != undefined) {
+                                    part.push($scope.flintList[i]);
+                                }
+                            }
+                            $scope.flintPart = part;
+                            break;
+                    }
+                }
+            )
+        })
+    }
+
+    const getCurrentPeriod = () => {
+        myGroup.map(gp => {
+            appService.getAllPrepare(gp).then(
+                (res) => {
+                    switch (gp) {
+                        case "AGATE":
+                            $scope.period_A = res.data.period
+                            break;
+                        case "BERYL":
+                            $scope.period_B = res.data.period
+                            break;
+                        case "CELESTINE":
+                            $scope.period_C = res.data.period
+                            break;
+                        case "DIAMOND":
+                            $scope.period_D = res.data.period
+                            break;
+                        case "EMERALD":
+                            $scope.period_E = res.data.period
+                            break;
+                        case "FLINT":
+                            $scope.period_F = res.data.period
+                            break;
+                    }
+                }
+            )
+        })
+
+    }
+
+    const validation = () => {
+        let data = {};
+        myPeriod = [$scope.period_A,$scope.period_B,$scope.period_C,$scope.period_D,$scope.period_E,$scope.period_F];
+        i = 0;
+        userService.getIdLogged().then(
+            (res) => {
+                myPeriod.map(pd => {
+                    data = {
+                        "period": pd,
+                        "number":numberWinner[pd],
+                        "color": colorWinner[pd],
+                        "groups": myGroup[i]
+                    }
+                    appService.validateOrdering(res.data, data).then(
+                        (res) => {
+                            if (res.data == "win") {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    text: `You win with the period ${pd} in groups ${groups}`,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            }
+                        }
+                    )
+                    i++;
+                })
+            }
+        )
+    }
+
+    // ------------------------------------GAMING DELIMITATION END----------------------------------
+    getAllPrime();
+    getCurrentPeriod();
+
     function unSelectContractAll (attr,color) {
         $scope.contract = 10;
         document.getElementById(`${attr}10`).className = `btn btn-outline-${color} btn-sm`
@@ -238,7 +588,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
             $scope.bet = 1;
         } else if (e == 10) {
             el = "10b";
-        } 
+        }
         $scope.bet = e;
         if (document.getElementById(`${attr}${el}`) != undefined) {
             document.getElementById(`${attr}${el}`).className = `btn btn-${color} btn-sm`;
@@ -250,7 +600,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                 case "moins":
                     $scope.bet --
                     break;
-                
+
                 case "plus":
                     if ($scope.bet < 99) {
                         $scope.bet ++
@@ -277,105 +627,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
     const resetAll = () => {
         appService.resetAll();
     }
-    const getAll = () => {
-        $scope.agatePart = [];
-        $scope.berylPart = [];
-        $scope.celestinePart = [];
-        $scope.diamondPart = [];
-        $scope.emeraldPart = [];
-        $scope.flintPart = [];
-        appService.getAll("AGATE",$scope.pages).then(
-            (res) => {
-                $scope.agateList = res.data;
-                $scope.agateList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.agateList[i] != undefined) {
-                        $scope.agatePart.push($scope.agateList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.getAll("BERYL",$scope.pages).then(
-            (res) => {
-                $scope.berylList = res.data;
-                $scope.berylList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.berylList[i] != undefined) {
-                        $scope.berylPart.push($scope.berylList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.getAll("CELESTINE",$scope.pages).then(
-            (res) => {
-                $scope.celestineList = res.data;
-                $scope.celestineList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.celestineList[i] != undefined) {
-                        $scope.celestinePart.push($scope.celestineList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.getAll("DIAMOND",$scope.pages).then(
-            (res) => {
-                $scope.diamondList = res.data;
-                $scope.diamondList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.diamondList[i] != undefined) {
-                        $scope.diamondPart.push($scope.diamondList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.getAll("EMERALD",$scope.pages).then(
-            (res) => {
-                $scope.emeraldList = res.data;
-                $scope.emeraldList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.emeraldList[i] != undefined) {
-                        $scope.emeraldPart.push($scope.emeraldList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.getAll("FLINT",$scope.pages).then(
-            (res) => {
-                $scope.flintList = res.data;
-                $scope.flintList.reverse();
-                for (let i = 0; i < 10;i++) {
-                    if ($scope.flintList[i] != undefined) {
-                        $scope.flintPart.push($scope.flintList[i]);
-                    }
-                }
-                moreCharge();
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-    }
-    getAll($scope.agateList)
+
     $scope.goBackMore = () => {
         $location.path(`${$routeParams.group}`);
     }
@@ -395,15 +647,15 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                 case "agate":
                     $scope.moreData = $scope.agateList;
                     break;
-                
+
                 case "beryl":
                     $scope.moreData = $scope.berylList;
                     break;
-                
+
                 case "celestine":
                     $scope.moreData = $scope.celestineList;
                     break;
-            
+
                 case "diamond":
                     $scope.moreData = $scope.diamondList;
                     break;
@@ -411,7 +663,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                 case "emerald":
                     $scope.moreData = $scope.emeraldList;
                     break;
-                
+
                 case "flint":
                     $scope.moreData = $scope.flintList;
                     break;
@@ -419,279 +671,81 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
             }
         }
     }
-    const setAll = () => {
-        appService.randomize("AGATE").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("AGATE",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        console.log(res)
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In AGATE groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.randomize("BERYL").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("BERYL",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        console.log(res);
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In BERYL groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }   
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.randomize("CELESTINE").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("CELESTINE",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        console.log(res);
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In CELESTINE groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.randomize("DIAMOND").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("DIAMOND",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        console.log(res);
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In DIAMOND groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.randomize("EMERALD").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("EMERALD",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        // console.log(res);
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In EMERALD groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-        appService.randomize("FLINT").then(
-            (res) => {
-                // console.log(res)
-                let service;
-                appService.adjust("FLINT",res.data.period, res.data.result, res.data.number).then(
-                    (result) => {
-                        service = {
-                            "period": result.data.period,
-                            "number":result.data.number,
-                            "color": result.data.result,
-                            "groups": result.data.groups
-                        }
-                        userService.getIdLogged().then(
-                            (res) => {
-                                appService.validateOrdering(res.data,service).then(
-                                    (res) => {
-                                        // console.log(res);
-                                        if (res.data.includes("win")) {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                text: `Congratulations, you win with period Id: ${service.period}! In FLINT groups`,
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
-                                        loadUserInfo();
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            },
-            (err) => {
-                console.log(err)
-            }
-        )
-    }
     $scope.goTo = (url) => {
         $location.path(url);
     }
     $scope.redirectTo = (url) => {
         window.location = url;
     }
-    appService.getAll().then(
-        (res) => {
-            // console.log(res)
-        },
-        (err) => {
-            console.log(err)
-        }
-    )
     const loadUserInfo = () => {
         userService.getIdLogged().then(
             (res) => {
-                appService.getCurrentOrder(res.data).then(
-                    (res) => {
-                        $scope.currentOrder = res.data;
-                        // console.log($scope.currentOrder)
-                    },
-                    (err) => {  
-                        console.log(err);
-                    }
-                )
-                appService.getHistoryOrder(res.data).then(
-                    (res) => {
-                        $scope.historyOrder = res.data;
-                        // console.log($scope.historyOrder)
-                    },
-                    (err) => {  
-                        console.log(err);
-                    }
-                )
+                myGroup.map(gp => {
+                    appService.getCurrentOrder(res.data, gp).then(
+                        (res) => {
+                            switch (gp) {
+                                case "AGATE":
+                                    $scope.currentOrderA = res.data;
+                                    break;
+                                case "BERYL":
+                                    $scope.currentOrderB = res.data;
+                                    break;
+                                case "CELESTINE":
+                                    $scope.currentOrderC = res.data;
+                                    break;
+                                case "DIAMOND":
+                                    $scope.currentOrderD = res.data;
+                                    break;
+                                case "EMERALD":
+                                    $scope.currentOrderE = res.data;
+                                    break;
+                                case "FLINT":
+                                    $scope.currentOrderF = res.data;
+                                    break;
+                            }
+                            // console.log($scope.currentOrder)
+                        },
+                        (err) => {
+                            console.log(err);
+                        }
+                    )
+                    appService.getHistoryOrder(res.data, gp).then(
+                        (res) => {
+                            switch (gp) {
+                                case "AGATE":
+                                    $scope.historyOrderA = res.data;
+                                    break;
+                                case "BERYL":
+                                    $scope.historyOrderB = res.data;
+                                    break;
+                                case "CELESTINE":
+                                    $scope.historyOrderC = res.data;
+                                    break;
+                                case "DIAMOND":
+                                    $scope.historyOrderD = res.data;
+                                    break;
+                                case "EMERALD":
+                                    $scope.historyOrderE = res.data;
+                                    break;
+                                case "FLINT":
+                                    $scope.historyOrderF = res.data;
+                                    break;
+                            }
+                            // console.log($scope.historyOrder)
+                        },
+                        (err) => {
+                            console.log(err);
+                        }
+                    )
+                })
                 userService.getBalance(res.data).then(
                     (res) => {
                         $scope.balanceValue = res.data.balance==undefined?0:res.data.balance;
                     },
-                    (err) => {  
+                    (err) => {
                         console.log(err);
                     }
-                ) 
+                )
                 userService.getUserInfo(res.data).then(
                     (res) => {
                         $scope.fname = res.data.first_name;
@@ -752,12 +806,29 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
     $scope.sec = time.sec;
     setInterval(async() => {
         block = document.getElementsByClassName("timeControl");
+
+        // // ---------------------------BEGIN Game timing -------------------------------
+
+        if ($scope.min == 0 && $scope.sec == 0) {
+            prepare();
+        } else if ($scope.min == 0 && $scope.sec == 29) {
+            randomize();
+        } else if ($scope.min == 0 && $scope.sec == 20) {
+            adjust();
+        } else if ($scope.min == 0 && $scope.sec == 15) {
+            getAll();
+            validation();
+            loadUserInfo();
+        }
+
+        // ---------------------------END Game timing -------------------------------
+
         if ($scope.min > 0 && $scope.sec == 0) {
             $scope.min -= 1;
             $scope.sec = 59;
         } else if ($scope.min == 0 && $scope.sec ==0) {
             $scope.min = 2;
-            $scope.sec = 45;
+            $scope.sec = 46;
             resetAll();
             document.getElementById("timerCounter").classList["value"] = "p-2 bg-light text-dark";
             if (block.length > 0) {
@@ -773,16 +844,16 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                     block[i].disabled = false;
                 }
             }
-        } else if ($scope.min == 0 && $scope.sec == 25) {
-            setAll();
-        } else if ($scope.min == 0 && $scope.sec == 15) {
-            getAll();
-        } 
+        }
+
         if ($scope.min == 0 && $scope.sec <= 30) {
             document.getElementById("timerCounter").classList["value"] = "p-2 bg-danger text-dark";
         }
+
         $scope.sec--;
+
         document.getElementById("timerCounter").innerHTML = `${$scope.min<10?"0"+$scope.min:$scope.min}:${$scope.sec<10?"0"+$scope.sec:$scope.sec}`;
+
     }, 1000)
 })
 
@@ -814,7 +885,7 @@ app.controller('accountCtrl', ($scope,userService) => {
                 console.log(err);
             }
         )
-        
+
     }
 })
 
@@ -839,10 +910,21 @@ app.controller('rechargeCtrl', ($scope, userService) => {
     }
 })
 
-app.controller('adminCtrl', (adminService, $scope, complaintService) => {
+app.controller('adminCtrl', (adminService, userService, appService, $scope, complaintService) => {
     $scope.results = [];
     $scope.responseAll = [];
     $scope.nbrComplaint = 0;
+    let link = appService.getHost();
+    userService.getIdLogged().then(
+        (res) => {
+            appService.getPromotion(res.data).then(
+                (res) => {
+                    $scope.key = res.data.id_para
+                    $scope.links = `${link}/views/registration/registre.php?key=${res.data.id_para}`;
+                }
+            )
+        }
+    )
     const charge = () => {
         complaintService.getAll().then(
             (res) => {
@@ -880,8 +962,17 @@ app.controller('adminCtrl', (adminService, $scope, complaintService) => {
             }
         )
     }
+    adminService.getParams().then(
+        (res) => {
+            $scope.paypalMail = res.data.paypalAccount
+            $scope.paypalPassword = res.data.paypalPassword
+            $scope.gpayMail = res.data.gpayAccount
+            $scope.gpayPassword = res.data.gpayPassword
+        }
+    )
     setInterval(() => {
         getNewComplaint()
+        adminService.transfertAdmin();
         adminService.getDataOrder().then(
             (res) => {
                 $scope.nbrOfPlayer = res.data.nbrOfPlayer
@@ -899,8 +990,6 @@ app.controller('adminCtrl', (adminService, $scope, complaintService) => {
                 $scope.winner = res.data.nbr_winner
                 $scope.wallet = res.data.wallet
                 $scope.profit = res.data.wallet_profit
-                $scope.mailPay = res.data.adminAccount
-                $scope.passPay = res.data.passwordAccount
                 $scope.w_agate = res.data.w_agate
                 $scope.w_beryl= res.data.w_beryl
                 $scope.w_celestine = res.data.w_celestine
@@ -917,7 +1006,7 @@ app.controller('adminCtrl', (adminService, $scope, complaintService) => {
                 console.log(err);
             }
         )
-        
+
     }, 1000)
     $scope.onSearch = (value) => {
         $scope.results = [];
@@ -1019,7 +1108,7 @@ app.controller('pswController', ($scope, passwordService) => {
             }
         )
     }
-    
+
 })
 
 app.controller('addressCtrl', (userService, $scope) => {
@@ -1106,10 +1195,10 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
                     (res) => {
                         $scope.balanceValue = res.data.balance==undefined?0:res.data.balance;
                     },
-                    (err) => {  
+                    (err) => {
                         console.log(err);
                     }
-                ) 
+                )
             }
         )
     }
@@ -1223,11 +1312,58 @@ app.controller("promotionCtrl", ($scope, appService, userService) => {
                 (res) => {
                     $scope.key = res.data.id_para
                     $scope.links = `${link}/views/registration/registre.php?key=${res.data.id_para}`;
-                    console.log($scope.links)
+                }
+            )
+            userService.getBalance(res.data).then(
+                (res) => {
+                    $scope.bonus = res.data.bonus==undefined?0:res.data.bonus;
+                },
+                (err) => {
+                    console.log(err);
                 }
             )
         }
     )
+    setInterval(() => {
+        userService.getIdLogged().then(
+            (res) => {
+                userService.activeProme(res.data).then(
+                    (res) => {
+                        $scope.active = res.data.active
+                        $scope.people = res.data.people
+                        $scope.contribution = res.data.contribution
+                    }
+                )
+            }
+        )
+    }, 500)
+    $scope.convert = (data) => {
+        userService.getIdLogged().then(
+            (res) => {
+                appService.convertBonus(res.data, data).then(
+                    (res) => {
+                        if (res.data == "ok") {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                text: 'The bonus is transfered in your balance',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                text: 'Error',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    }
+                )
+            }
+        )
+    }
     $scope.sendMail = (address) => {
         let data = {
             object: "Invitation code",

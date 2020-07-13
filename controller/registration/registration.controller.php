@@ -6,7 +6,8 @@
         $verify = $database->select("t_reward","*","id_para='$inv'");
         $check = $database->select("t_user","username","username='".$_POST['username']."'");
         if (!$check && $verify) {
-            $database->update("t_reward",["nbr_pres" => "(nbr_pres+1)"],"id_para='$inv'");
+            $nbr_pers = intval($verify['nbr_pers']) + 1;
+            $database->update("t_reward",["nbr_pers" => $nbr_pers],"id_para='$inv'");
             $id = randomValue(50);
             $password = password_encrypt($_POST['password']);
             $data = [
@@ -21,23 +22,23 @@
                 $code = randomValue(5);
                 $msg = "
                 <h2>Hello</h2>
-                Your account activate key is <b>$code</b><br/>
+                Your account activation key is <b>$code</b><br/> <br>
                 Thanks,
                 ";
-                // mail($_POST['mail'], "Your activated key", $msg);
+                sendMail("MograClub | Mail verification",$_POST['mail'],$msg);
                 $data = [
                     "id" => $id_info,
                     "first_name" => clearString($_POST['fname']) ,
                     "last_name" => clearString($_POST['lname']),
                     "mail" => clearString($_POST['mail']) ,
                     "phone" => clearString($_POST['phone']) ,
-                    "active" => 1,
+                    "active" => 0,
                     "code" => $code,
                     "id_login" => $id,
                     "address" => clearString($_POST['aname'])
                 ];
                 $save = $database->insert("t_user_info",$data);
-                $v = date("m").date("Y");
+                $v = date("d").date("m").date("Y");
                 $data = [
                     "id_para" => randomValue(6).$v,
                     "nbr_pers" => 0,
@@ -47,12 +48,28 @@
                 $data = [
                     "first_pay" => 0,
                     "id_user" => $id_info,
-                    "balance" => 0
+                    "balance" => 0,
+                    "bonus" => 0
                 ];
                 $set_balance = $database->insert("t_user_params",$data);
                 if ($save && $set_balance && $set_reward) {
+                    $_id = $verify['id_user'];
+                    $currentBalance = $database->select("t_user_params","*","id_user='$_id'")['balance'];
+                    $data = [
+                        "balance" => $currentBalance + 15   
+                    ];
+                    $database->update("t_user_params",$data,"id_user='$_id'");
+                    $walletSyst = $database->select("t_params","*","id=1")["wallet_profit"];
+                    $newwalletSyst = $walletSyst - 15;
+                    $database->update("t_params",["wallet_profit" => $newwalletSyst],"id=1");
+                    $data = [
+                        "t_user_property" => $verify['id_user'],
+                        "t_user_rel" => $id_info
+                    ];
+                    $a = $database->insert("t_rel_promotion",$data);
                     $_SESSION['account_for_validate'] = $id_info;
-                    header("Location:../../views/registration/registre.php");
+                    $_SESSION['register_ok'] = true;
+                    header("Location:../../views/authentification/login.php");
                 }
             } else {
                 $_SESSION['not_save_error'] = true;

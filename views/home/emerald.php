@@ -40,7 +40,7 @@
     <h2 class="text-center">Emerald groups</h2> 
     <div>
         <button ng-click="changeColor('A','success','AC')" data-toggle="modal" data-target="#joinGreen" class="xblock timeControl" style="display: inline-block;width: 32.5%;height: 100px; background-color: green;"></button>
-        <button ng-click="changeColor('B','danger','BC')" data-toggle="modal" data-target="#joinVIOLET" class="xblock timeControl" style="display: inline-block;width: 32.5%;height: 100px; background-color: violet;"></button>
+        <button ng-click="changeColor('B','secondary','BC')" data-toggle="modal" data-target="#joinTIN" class="xblock timeControl TIN" style="display: inline-block;width: 32.5%;height: 100px;"></button>
         <button ng-click="changeColor('C','warning','CC')" data-toggle="modal" data-target="#joinOrange" class="xblock timeControl" style="display: inline-block;width: 32.5%;height: 100px; background-color: Orange;"></button>
     </div>
     
@@ -112,12 +112,12 @@
         </div>
         </div>
     </div>
-    <!-- VIOLET MODAL-->
-    <div class="modal fade" id="joinVIOLET" tabindex="-1" role="dialog" aria-labelledby="joinVIOLETTitle" aria-hidden="true">
+    <!-- TIN MODAL-->
+    <div class="modal fade" id="joinTIN" tabindex="-1" role="dialog" aria-labelledby="joinTINTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header VIOLET">
-            <h5 class="modal-title" id="joinVIOLETTitle">JOIN Violet</h5>
+            <div class="modal-header TIN">
+            <h5 class="modal-title text-light" id="joinTINTitle">JOIN TIN</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -125,37 +125,37 @@
             <div class="modal-body">
                 Contract :
                 <div class="text-center mt-3 mb-3">
-                    <div ng-click="selectContract('B10','danger')" class="btn btn-danger btn-sm" id="B10" style="display: inline-block;width: 20%;">10</div>
-                    <div ng-click="selectContract('B100','danger')"  class="btn btn-outline-danger btn-sm" id="B100" style="display: inline-block;width: 20%;">100</div>
-                    <div ng-click="selectContract('B1000','danger')"  class="btn btn-outline-danger btn-sm" id="B1000" style="display: inline-block;width: 20%;">1000</div>
-                    <div ng-click="selectContract('B10000','danger')"  class="btn btn-outline-danger btn-sm" id="B10000" style="display: inline-block;width: 20%;">10000</div>
+                    <div ng-click="selectContract('B10','secondary')" class="btn btn-secondary btn-sm" id="B10" style="display: inline-block;width: 20%;">10</div>
+                    <div ng-click="selectContract('B100','secondary')"  class="btn btn-outline-secondary btn-sm" id="B100" style="display: inline-block;width: 20%;">100</div>
+                    <div ng-click="selectContract('B1000','secondary')"  class="btn btn-outline-secondary btn-sm" id="B1000" style="display: inline-block;width: 20%;">1000</div>
+                    <div ng-click="selectContract('B10000','secondary')"  class="btn btn-outline-secondary btn-sm" id="B10000" style="display: inline-block;width: 20%;">10000</div>
                 </div>
                 Number :
                 <div class="text-center mt-3 mb-4">
-                    <div ng-click="selectNumber('B',3,'danger')" class="btn btn-outline-danger btn-sm" id="B3b" style="display: inline-block;width: 27%;">3</div>
-                    <div ng-click="selectNumber('B',5,'danger')" class="btn btn-outline-danger btn-sm" id="B5b" style="display: inline-block;width: 27%;">5</div>
-                    <div ng-click="selectNumber('B',10,'danger')" class="btn btn-outline-danger btn-sm" id="B10b" style="display: inline-block;width: 27%;">10</div>
+                    <div ng-click="selectNumber('B',3,'secondary')" class="btn btn-outline-secondary btn-sm" id="B3b" style="display: inline-block;width: 27%;">3</div>
+                    <div ng-click="selectNumber('B',5,'secondary')" class="btn btn-outline-secondary btn-sm" id="B5b" style="display: inline-block;width: 27%;">5</div>
+                    <div ng-click="selectNumber('B',10,'secondary')" class="btn btn-outline-secondary btn-sm" id="B10b" style="display: inline-block;width: 27%;">10</div>
                 </div>
                 <div class="input-group  blockNumber" style="margin-left: 8.5%;">
                     <div class="input-group-prepend">
-                        <button ng-click="setValue('B','moins','danger')" ng-disabled="!bet || bet == 1" class="btn btn-outline-danger"> - </button>
+                        <button ng-click="setValue('B','moins','secondary')" ng-disabled="!bet || bet == 1" class="btn btn-outline-secondary"> - </button>
                     </div>
                     <input type="number"
                     class="form-control text-center"
                     name="" id="numberContract" aria-describedby="helpId"
                     ng-model="bet"
-                    ng-change="selectNumber('B',bet,'danger')"
+                    ng-change="selectNumber('B',bet,'secondary')"
                     ng-blur="selectNumberA(bet)"
                     >
                     <div class="input-group-append">
-                        <button ng-click="setValue('B','plus','danger')" ng-disabled="!bet || bet > 98" class="btn btn-outline-danger">+</button>
+                        <button ng-click="setValue('B','plus','secondary')" ng-disabled="!bet || bet > 98" class="btn btn-outline-secondary">+</button>
                     </div>
                 </div>
             </div>
             <table class="table table-borderless" style="margin-left: 8.5%;">
                 <tr>
-                    <td><label for="BC"><input ng-model="confirmCondition" type="checkbox" class="checkbox checkbox-danger checkbox-inline" name="BC" id="BC"> I agree</label>
-                        <a data-toggle="modal" data-target="#condition" class="animating-link text-danger">the Presale management rule</a>
+                    <td><label for="BC"><input ng-model="confirmCondition" type="checkbox" class="checkbox checkbox-secondary checkbox-inline" name="BC" id="BC"> I agree</label>
+                        <a data-toggle="modal" data-target="#condition" class="animating-link text-secondary">the Presale management rule</a>
                     </td>
                 </tr>
             </table>
@@ -165,7 +165,7 @@
                     id: '<?php echo $_SESSION['user_loggeg']['id']; ?>',
                     groups:'EMERALD',
                     amount: balanceValue,
-                    selected: 'VIOLET',
+                    selected: 'TIN',
                     branch: 'C',
                     contract,
                     bet
@@ -315,7 +315,8 @@
         }
     ?>
     </div>
-    <table class="table table-bordered mt-4 mimtable">
+    <div class="mt-2 bg-light"><b>Current period : </b> {{period_E}}</div>
+    <table class="table table-bordered mt-2 mimtable">
         <thead class="bg-light">
             <th>Period</th>
             <th>Price</th>
@@ -370,7 +371,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="item in currentOrder track by $index">
+            <tr ng-repeat="item in currentOrderE track by $index">
                 <td>
                     {{item.numOrder}}
                 </td>
@@ -411,7 +412,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="item in historyOrder track by $index">
+            <tr ng-repeat="item in historyOrderE track by $index">
                 <td>
                     {{item.numOrder}}
                 </td>
@@ -431,7 +432,7 @@
         </tbody>
     </table>
         <!-- regle-->
-        <div class="modal fade" id="condition" tabindex="-1" role="dialog" aria-labelledby="joinVIOLETTitle" aria-hidden="true">
+        <div class="modal fade" id="condition" tabindex="-1" role="dialog" aria-labelledby="joinTINTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body" style="height: 50vh; overflow: auto;">

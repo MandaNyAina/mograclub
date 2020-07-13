@@ -9,7 +9,7 @@
     <div>
         <button ng-click="goTo('')" class="btn btn-outline-primary btn-sm"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
     </div>
-    <h2 class="text-center">Compaints or suggestion <i class="fa fa-sellsy" aria-hidden="true"></i></h2> 
+    <h2 class="text-center">Complaints or suggestion <i class="fa fa-sellsy" aria-hidden="true"></i></h2> 
     <div>
         <table class="table table-bordered table-hover table-sm w-50 text-center mx-auto">
             <tr>

@@ -4,8 +4,10 @@
     $key = parse_ini_file("../config/config.ini")["key_encrypt"];
     if (is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
         $row = [
-            "adminAccount" => decrypt($result['adminAccount']),
-            "passwordAccount" => decrypt($result['passwordAccount']),
+            "paypalAccount" => decrypt($result['paypalAccount']),
+            "paypalPassword" => decrypt($result['paypalPassword']),
+            "gpayAccount" => decrypt($result['gpayAccount']),
+            "gpayPassword" => decrypt($result['gpayPassword']),
             "wallet" => $result['wallet'],
             "wallet_profit" => $result['wallet_profit'],
             "nbr_winner" => $result['nbr_winner'],

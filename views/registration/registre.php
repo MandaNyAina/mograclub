@@ -46,12 +46,12 @@
                 <?php if (isset($_SESSION['invite_code_error']) && $_SESSION['invite_code_error']) { ?>
                 <tr>
                     <td colspan="2" class="alert alert-danger text-center">
-                        Invitation code error
+                        Invitation code ivalid
                     </td>
                 </tr>
                 <?php } $_SESSION['invite_code_error'] = false; ?>
                 <tr>
-                    <td class="w-25">First name</td>
+                    <td style="width: 40%;">First name</td>
                     <td><input required name="fname" id="fname" type="text" class="form-control"></td>
                 </tr>
                 <tr>
@@ -61,12 +61,7 @@
                 <tr>
                     <td>E-mail adress</td>
                     <td>
-                        <div class="input-group">
-                            <input required ng-change="changeMail()" name="mail" id="mail" type="email" ng-model="mail" class="form-control">
-                            <div class="input-group-append">
-                                <button ng-click="sendCode(mail)" ng-disabled="myForm.mail.$invalid" type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-warning" id="btnVerify">Verify</button>
-                            </div>
-                        </div>
+                        <input required ng-change="changeMail()" name="mail" id="mail" type="email" ng-model="mail" class="form-control">
                     </td>
                 </tr>
                 <tr>
@@ -112,7 +107,7 @@
                 <tr>
                     <td>Invitation code</td>
                     <td>
-                        <input ng-model="invite" ng-value="'<?php echo @$_GET['key'] ?>'" name="invite" id="invite" type="text" class="form-control {{PassConfclassPass}}">
+                        <input required ng-model="invite" ng-value="'<?php echo @$_GET['key'] ?>'" name="invite" id="invite" type="text" class="form-control">
                     </td>
                 </tr>
                 <tr>
@@ -123,30 +118,5 @@
             </tbody>
         </table>
     </form>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">The verification code is send in {{mail}}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            Please enter the code here : 
-            <div>
-                <input ng-model="codeVerificator" placeholder="Please enter the verification key" type="number" class="form-control">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button ng-click="resend(mail)" type="button" ng-click="resend(mail)" class="btn btn-primary">Resend</button>
-            <button ng-disabled="!codeVerificator" type="button" ng-click="verifyCode(codeVerificator)" class="btn btn-primary" data-dismiss="modal">Send</button>
-        </div>
-        </div>
-    </div>
-    </div>
 </body>
 </html>

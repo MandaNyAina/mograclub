@@ -1,20 +1,32 @@
 <?php 
     require '../../config/constant.php';
     if ($_GET['form'] == "reset") {
-        if (is_form_valid($_POST['password'])) {
+        if (is_form_valid($_POST['password']) && is_form_valid($_POST['defaultPay'])) {
             $data = [
                 "password" => password_encrypt($_POST['password'])
             ];
             $database->update("t_user",$data,"type='ADMIN'");
+            $database->update("t_params",["defaults" => $_POST['defaultPay']],"id=1");
             echo '<script>alert("Success")</script>';
         } else {
-            echo '<script>alert("Please entrer a password value")</script>';
+            echo '<script>alert("Password and payement default is require")</script>';
         }
-    } else if ($_GET['form'] == "bank") {
-        if (is_form_valid($_POST['mailPay']) && is_form_valid($_POST['passPay'])) {
+    } else if ($_GET['form'] == "paypal") {
+        if (is_form_valid($_POST['paypalMail']) && is_form_valid($_POST['paypalPassword'])) {
             $data = [
-                "adminAccount" => encrypt($_POST['mailPay']),
-                "passwordAccount" => encrypt($_POST['passPay'])
+                "paypalAccount" => encrypt($_POST['paypalMail']),
+                "paypalPassword" => encrypt($_POST['paypalPassword'])
+            ];
+            $database->update("t_params",$data,"id=1");
+            echo '<script>alert("Success")</script>';
+        } else {
+            echo '<script>alert("Please entrer inside email and password")</script>';
+        }
+    } else if ($_GET['form'] == "gpay") {
+        if (is_form_valid($_POST['gpayMail']) && is_form_valid($_POST['gpayPassword'])) {
+            $data = [
+                "gpayAccount" => encrypt($_POST['gpayMail']),
+                "gpayPassword" => encrypt($_POST['gpayPassword'])
             ];
             $database->update("t_params",$data,"id=1");
             echo '<script>alert("Success")</script>';

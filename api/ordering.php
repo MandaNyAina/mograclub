@@ -41,6 +41,7 @@
             $profit = 0;
             $res = $database->selectMore("t_order","*","id_user='$id' and status='current' and groups='$groups '");
             foreach ($res as $n) {
+                $gagne = 0;
                 $selected = $n["selected"];
                 $amount = $n["amount"];
                 $idOrder = $n["numOrder"];
@@ -74,7 +75,7 @@
                             "date" => date("Y-m-d")
                         ];
                         $database->insert("t_recharge",$data);
-                        echo "win";
+                        $gagne++;
                     } else {
                         // losing
                         $data = [
@@ -126,8 +127,8 @@
                                 "date" => date("Y-m-d")
                             ];
                             $database->insert("t_recharge",$data);
-                            echo "win";
-                        } if (($selected == "GREEN" && $colorWinner == "VIOLET,GREEN") || ($selected == "ORANGE" && $colorWinner == "VIOLET,ORANGE")) {
+                            $gagne++;
+                        } if (($selected == "GREEN" && $colorWinner == "TIN,GREEN") || ($selected == "ORANGE" && $colorWinner == "TIN,ORANGE")) {
                             // winning
                             if ($amount < 50) {
                                 $amount_winning = $amount * 1.25;
@@ -160,8 +161,8 @@
                                 "date" => date("Y-m-d")
                             ];
                             $database->insert("t_recharge",$data);
-                            echo "win";
-                        } else if (($selected == "VIOLET" && $colorWinner == "VIOLET,GREEN") || ($selected == "VIOLET" && $colorWinner == "VIOLET,ORANGE")) {
+                            $gagne++;
+                        } else if (($selected == "TIN" && $colorWinner == "TIN,GREEN") || ($selected == "TIN" && $colorWinner == "TIN,ORANGE")) {
                             // winning up
                             if ($amount < 100) {
                                 $amount_winning = $amount * 2.8;
@@ -194,7 +195,7 @@
                                 "date" => date("Y-m-d H:i:s")
                             ];
                             $database->insert("t_recharge",$data);
-                            echo "win";
+                            $gagne++;
                         } else {
                             // losing
                             $data = [
@@ -213,6 +214,11 @@
                             echo "lose";
                         }
                 }   
+            }
+            if ($gagne>0) {
+                echo "win";
+            } else {
+                echo "lose";
             }
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {

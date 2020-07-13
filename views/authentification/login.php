@@ -42,6 +42,15 @@
             <?php }
                 $_SESSION['password_change'] = false;
             ?>
+            <?php if (isset($_SESSION['register_ok']) && $_SESSION['register_ok']) {?>
+            <tr>
+                <td class="alert alert-success text-center">
+                    Your account is registered 
+                </td>
+            </tr>
+            <?php }
+                $_SESSION['register_ok'] = false;
+            ?>
             <tr>
                 <td>
                     <label for="username">Username</label>

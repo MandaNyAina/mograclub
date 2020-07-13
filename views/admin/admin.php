@@ -20,7 +20,7 @@
         <div class="btn-group mx-auto w-100" style="top: 0;position:sticky">
             <a class="btn btn-outline-primary btn-sm" href="admin.php"><i class="fas fa-user-shield"></i><span class="menuMaxLength"> Admin service</span></a>
             <a class="btn btn-primary btn-sm" href="adminComplaint.php"><i class="fab fa-facebook-messenger"></i><span class="menuMaxLength"> Complaints</span>
-                <div ng-if="nbrComplaint != 0" class="bg-danger" style="width: 18px;height: 18px; display: inline-block;border-radius: 50%;font-size: 12px;">{{nbrComplaint}}</div>
+                <div ng-if="nbrComplaint != 0" class="bg-danger" style="width: 18px;height: 18px; display: inline-block;border-radius: 50%;font-size: 12px;" ng-bind="nbrComplaint"></div>
             </a>
             <a class="btn btn-primary btn-sm" href="adminSetting.php"><i class="fas fa-user-cog"></i><span class="menuMaxLength"> Account setting</span></a>
             <a class="btn btn-secondary btn-sm"  href="../../controller/delog/delog.controller.php"><i class="fas fa-sign-out-alt"></i><span class="menuMaxLength"> Logout</span></a>
@@ -39,12 +39,12 @@
             </div>
             <div ng-repeat="i in results">
                 <div class="mt-2">
-                    <b>ID</b>: {{i.id}}<br>
-                    <b>First name :</b> {{i.first_name}}<br>
-                    <b>Last name :</b> {{i.last_name}}<br>
-                    <b>Phone :</b> {{i.phone}}<br>
-                    <b>Address :</b> {{i.address}}<br>
-                    <b>Mail :</b> <a href="mailto:{{i.mail}}">{{i.mail}}</a>
+                    <b>ID</b>: <span ng-bind="i.id"></span><br>
+                    <b>First name :</b> <span ng-bind="i.first_name"></span><br>
+                    <b>Last name :</b> <span ng-bind="i.last_name"></span><br>
+                    <b>Phone :</b> <span ng-bind="i.phone"></span><br>
+                    <b>Address :</b> <span ng-bind="i.address"></span><br>
+                    <b>Mail :</b> <a href="mailto:{{i.mail}}"><span ng-bind="i.mail"></span></a>
                     <hr>
                 </div>
             </div>
@@ -58,9 +58,9 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{nbrOfPlayer}}</td>
-                <td>{{amount}}</td>
-                <td>{{winner}}</td>
+                <td ng-bind="nbrOfPlayer">Loading ..,</td>
+                <td ng-bind="amount">Loading ...</td>
+                <td ng-bind="winner">Loading ...</td>
             </tr>
         </tbody>
     </table>
@@ -74,32 +74,32 @@
         <tbody>
             <tr>
                 <td>Agate</td>
-                <td>{{agate}}</td>
-                <td>{{w_agate}}</td>
+                <td ng-bind="agate">Loading ...</td>
+                <td ng-bind="w_agate">Loading ...</td>
             </tr>
                 <td>Beryl</td>
-                <td>{{beryl}}</td> 
-                <td>{{w_beryl}}</td>
+                <td ng-bind="beryl">Loading ...</td> 
+                <td ng-bind="w_beryl">Loading ...</td>
             </tr>
             <tr>
                 <td>Celestine</td>
-                <td>{{celestine}}</td>
-                <td>{{w_celestine}}</td>
+                <td ng-bind="celestine">Loading ...</td>
+                <td ng-bind="w_celestine">Loading ...</td>
             </tr>
             <tr>
                 <td>Diamond</td>
-                <td>{{diamond}}</td>
-                <td>{{w_diamond}}</td>
+                <td ng-bind="diamond">Loading ...</td>
+                <td ng-bind="w_diamond">Loading ...</td>
             </tr>
             <tr>
                 <td>Emerald</td>
-                <td>{{emerald}}</td>
-                <td>{{w_emerald}}</td>
+                <td ng-bind="emerald">Loading ...</td>
+                <td ng-bind="w_emerald">Loading ...</td>
             </tr>
             <tr>
                 <td>Flint</td>
-                <td>{{flint}}</td>
-                <td>{{w_flint}}</td>
+                <td ng-bind="flint">Loading ...</td>
+                <td ng-bind="w_flint">Loading ...</td>
             </tr>
         </tbody>
     </table>
@@ -111,44 +111,80 @@
         </thead>
         <tbody>
             <td>
-                {{wallet}} <br>
-                <button data-toggle="modal" data-target="#sendMoney"  class="btn btn-outline-warning btn-sm">Send</button></td>
+                <span ng-bind="wallet">Loading ...</span> <br>
+                <button data-toggle="modal" data-target="#sendMoney1"  class="btn btn-outline-warning btn-sm">Send</button></td>
             <td>
-                {{profit}} <br> 
-                <button data-toggle="modal" data-target="#sendMoney"  class="btn btn-outline-warning btn-sm">Send</button></td>
+                <span ng-bind="profit">Loading ...</span> <br> 
+                <button data-toggle="modal" data-target="#sendMoney2"  class="btn btn-outline-warning btn-sm">Send</button></td>
             </td>
         </tbody>
     </table>
-    <div class="modal fade" id="sendMoney" tabindex="-1" role="dialog" aria-labelledby="sendMoneyTitle" aria-hidden="true">
+
+    <div class="modal fade" id="sendMoney1" tabindex="-1" role="dialog" aria-labelledby="sendMoneyTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="sendMoneyTitle">SEND MONEY <i class="spinner-grow"></i></h5>
+            <h5 class="modal-title" id="sendMoneyTitle">SEND MONEY FROM WALLET</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
             <div class="modal-body">
-                <div class="input-group">
-                    <select name="" id="" class="form-control-sm">
-                        <?php
-                            $pourcent = 0;
-                            $i = 0;
-                            while ($i <= 100) {
-                                echo "
-                                    <option value='$i'>$i%</option>
-                                ";
-                                $i += 5;
-                            }
-                        ?>
+                <div>
+                    Enter the amount <br>
+                    <input type="number" class="form-control" ng-model="amountWallet">
+                    Choose the payment
+                    <select class="form-control" ng-model="walletPay">
+                        <option value=""></option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Master">Master card</option>
+                        <option value="Google">Google pay</option>
+                        <option value="Paytm">Paytm</option>
+                        <option value="Phone">Phone pay</option>
+                        <option value="Amazon">Amazon pay</option>
+                        <option value="Bhim">Bhim upi</option>
+                        <option value="Perfectmoney">Perfectmoney</option>
                     </select>
-                    or
-                    <input type="text" class="form-control-sm">
                 </div>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Send</button>
+            <button type="button" ng-disabled="!amountWallet || !walletPay" class="btn btn-primary" data-dismiss="modal">Send</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sendMoney2" tabindex="-1" role="dialog" aria-labelledby="sendMoneyTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="sendMoneyTitle">SEND MONEY FROM WALLET PROFIT</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    Enter the amount <br>
+                    <input type="text" class="form-control" ng-model="amountWalletProfit">
+                    Choose the payment
+                    <select class="form-control" ng-model="walletPayProfit">
+                        <option value=""></option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Master">Master card</option>
+                        <option value="Google">Google pay</option>
+                        <option value="Paytm">Paytm</option>
+                        <option value="Phone">Phone pay</option>
+                        <option value="Amazon">Amazon pay</option>
+                        <option value="Bhim">Bhim upi</option>
+                        <option value="Perfectmoney">Perfectmoney</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" ng-disabled="!amountWalletProfit || !walletPayProfit" class="btn btn-primary" data-dismiss="modal">Send</button>
             </div>
         </div>
         </div>
