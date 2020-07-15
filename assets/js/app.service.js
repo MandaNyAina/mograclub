@@ -152,3 +152,30 @@ app.service("complaintService", function ($http) {
         return $http.get(`${host_protocole}${host_server}/api/getComplaint.php?key=${key}&id_complaint=${id}`);
     }
 })
+
+app.service("taskService", function ($http) {
+    this.getAllTask = () => {
+        return $http.get(`${host_protocole}${host_server}/api/getTask.php?key=${key}`);
+    }
+    this.getAllTaskById = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/getTask.php?key=${key}&id=${id}`);
+    }
+})
+
+app.service("redService", function ($http) {
+    this.getAllSend = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/getRed.php?key=${key}&id=${id}&type=send`);
+    }
+    this.getAllReceive = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/getRed.php?key=${key}&id=${id}&type=receive`);
+    }
+    this.sendRed = (data) => {
+        return $http.post(`${host_protocole}${host_server}/api/redenvelop.php?key=${key}`,data);
+    }
+    this.checkRed = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/checkRed.php?key=${key}&id_value=${id}`);
+    }
+    this.getRed = (id, idU) => {
+        return $http.get(`${host_protocole}${host_server}/api/setRed.php?key=${key}&idU=${idU}&v=${id}`);
+    }
+})

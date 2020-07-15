@@ -17,9 +17,14 @@
         $i = 0;
         while ($i < 5) {
             $randomColor = $color[rand(0,2)];
-            while (in_array($randomColor, $winnerFirstColor) || $randomColor == "TIN") {
-                $randomColor = $color[rand(0,2)];
+            if (count($winnerFirstColor) == 1) {
+                $randomColor = "TIN";
+            } else {
+                while (in_array($randomColor, $winnerFirstColor) || $randomColor == "TIN") {
+                    $randomColor = $color[rand(0,2)];
+                }
             }
+            
             if ($randomColor == "GREEN") {
                 $colorByNumber = [
                     0 => 3,

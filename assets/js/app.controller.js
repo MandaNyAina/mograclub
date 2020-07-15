@@ -222,7 +222,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                             data.amount = amount;
                             appService.sendOrdering(data.id, data).then(
                                 (res) => {
-                                    console.log(res);
+                                    // console.log(res);
                                     if (res.data == "Send Done") {
                                         loadUserInfo();
                                     }
@@ -541,6 +541,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                     }
                     appService.validateOrdering(res.data, data).then(
                         (res) => {
+                            console.log(res)
                             if (res.data == "win") {
                                 Swal.fire({
                                     position: 'top-end',
@@ -901,7 +902,7 @@ app.controller('rechargeCtrl', ($scope, userService) => {
     $scope.addBalance = (e,num) => {
         userService.updateBalance(e, num).then(
             (res) => {
-                console.log(res.data)
+                // console.log(res.data)
             },
             (err) => {
                 console.log(err)
@@ -936,7 +937,7 @@ app.controller('adminCtrl', (adminService, userService, appService, $scope, comp
     $scope.solved = (id) => {
         complaintService.solved(id).then(
             (res) => {
-                console.log(res)
+                // console.log(res)
                 if (res.data == "ok") {
                     charge()
                 }
@@ -1034,7 +1035,7 @@ app.controller('pswController', ($scope, passwordService) => {
                     $scope.loader = false;
                     $scope.valideTrue = true;
                     $scope.results = res.data;
-                    console.log(res.data)
+                    // console.log(res.data)
                 } else {
                     $scope.loader = false;
                     $scope.valideTrue = false;
@@ -1076,7 +1077,7 @@ app.controller('pswController', ($scope, passwordService) => {
         }
         passwordService.setPassword(id, data).then(
             (res) => {
-                console.log(res);
+                // console.log(res);
                 if (res.data == "ok") {
                     Swal.fire({
                         position: 'top-end',
@@ -1166,22 +1167,9 @@ app.controller('addressCtrl', (userService, $scope) => {
 app.controller("bankCtrl", (userService, $scope) => {
     $scope.typeValue = "";
     userService.getIdLogged().then(
-        (res) => {
-            userService.getBank(res.data).then(
-                (res) => {
-                    if (res.data.type == "PayPal") {
-                        $scope.typeBank = res.data.type,
-                        $scope.mailBank = res.data.mail,
-                        $scope.expBank = res.data.exp
-                    }
-                }
-            )
-        }
+        
     )
     $scope.saveBankPaypal = (e) => {
-        console.log(e)
-    }
-    $scope.saveBankMaster = (e) => {
         console.log(e)
     }
 })
@@ -1216,7 +1204,7 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
     $scope.withdrawal = (id,e) => {
         convertService.withdrawal(id,e).then(
             (res) => {
-                console.log(res)
+                // console.log(res)
                 if (res.data == "Ok") {
                     Swal.fire({
                         position: 'top-end',
@@ -1260,7 +1248,6 @@ app.controller("complaintCtrl", ($scope, complaintService, userService, $locatio
     $scope.solved = (id) => {
         complaintService.solved(id).then(
             (res) => {
-                console.log(res)
                 if (res.data == "ok") {
                     charge()
                 }
@@ -1392,3 +1379,154 @@ app.controller("promotionCtrl", ($scope, appService, userService) => {
         )
     }
 })
+
+app.controller("taskCtrl", ($scope, taskService) => {
+    $scope.allTask = [];
+    taskService.getAllTask().then(
+        (res) => {
+            $scope.allTask = res.data;
+        }
+    )
+})
+
+app.controller("redCtrl", ($scope, appService, userService, redService, $routeParams) => {
+    $scope.verified = false;
+    $scope.loader = false;
+    $scope.nav = 1;
+    $scope.allSend = [];
+    $scope.allReceived = [];
+    let l;
+    let host = appService.getHost()
+    $scope.varLink = `${host}/views/app/app.php#!/redenvelop/giving`;
+    let key = $routeParams.key_red;
+    const recharge = () => {
+        redService.checkRed(key).then(
+            (res) => {
+                console.log(res)
+                $scope.redEnvelopData = res.data;
+            }
+        )
+    }
+    $scope.send = (data) => {
+        redService.sendRed(data).then(
+            (res) => {
+                if (res.data == "amountKO") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        text: 'Your balance is low',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                } else if (res.data == "passError") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        text: 'Password error',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                } else {
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                          confirmButton: 'btn btn-success',
+                          cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                      })
+                      
+                      swalWithBootstrapButtons.fire({
+                        title: 'Congra',
+                        text: `The red link is ${host}/views/app/app.php#!/redenvelop/giving/${res.data}`,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Ok',
+                        reverseButtons: true
+                      }).then((result) => {
+                        if (result.value) {
+                          window.location = "/"
+                        }
+                      })
+                }
+            }
+        )
+        console.log(data)
+    }
+    userService.getIdLogged().then(
+        (res) => {
+            redService.getAllSend(res.data).then(
+                (res) => {
+                    $scope.allSend = res.data
+                    $scope.allSend.reverse()
+                }
+            )
+            redService.getAllReceive(res.data).then(
+                (res) => {
+                    $scope.allReceived = res.data
+                    $scope.allReceived.reverse()
+                }
+            )
+        }
+    )
+    recharge();
+    $scope.get = (id, idU) => {
+        redService.getRed(id, idU).then(
+            (res) => {
+                recharge();
+            }
+        )
+    }
+    $scope.navTo = (e) => {
+        $scope.nav = e
+        l = e==1?2:1;
+        document.getElementById(`btn${e}`).className = "btn btn-outline-primary";
+        document.getElementById(`btn${l}`).className = "btn btn-primary";
+    }
+    $scope.setRed = (id) => {
+        redService.getRed(id).then(
+            (res) => {
+                console.log(res);
+            }
+        )
+    }
+    let code = generateCode(6);
+    userService.getIdLogged().then(
+        (res) => {
+            userService.getUserInfo(res.data).then(
+                (res) => {
+                    $scope.mail = res.data.mail;
+                }
+            )
+        }
+    )
+    $scope.sendMail = (address) => {
+        let data = {
+            object: "RedEnvelop Code MograClub",
+            to: $scope.mail,
+            message: `
+            Hello, the redEnvelop key is ${code}
+            `
+        }
+        $scope.loader = true;
+        appService.sendMail(data).then(
+            (res) => {
+                $scope.mailAddress = '';
+                $scope.loader = false;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    text: 'Send !',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        )
+    }
+    $scope.checkCode = (x) => {
+        if (x == code) {
+            $scope.verified = true;
+        } else {
+            $scope.verified = false;
+        }
+    }
+}) 

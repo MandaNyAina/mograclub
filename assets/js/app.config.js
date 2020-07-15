@@ -9,6 +9,9 @@ app.config($routeProvider => {
     .when("/",{
         templateUrl: "../home/home.php"
     })
+    .when("/addBank",{
+        templateUrl: "../home/addBank.php"
+    })
     .when("/promotion/invite",{
         templateUrl: "../home/promotion.php"
     })
@@ -29,6 +32,15 @@ app.config($routeProvider => {
     })
     .when("/redenvelop",{
         templateUrl: "../home/redenvelop.php"
+    })
+    .when("/redenvelop/giving/:key_red", {
+        templateUrl: "../home/redenvelopGv.php"
+    })
+    .when("/redenvelop/start", {
+        templateUrl: "../home/redenvelopGo.php"
+    })
+    .when("/redenvelop/record",{
+        templateUrl: "../home/rendenvelopRed.php"
     })
     .when("/promotion",{
         templateUrl: "../home/promotionBase.php"

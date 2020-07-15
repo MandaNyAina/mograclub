@@ -12,13 +12,19 @@
     <h2 class="text-center">My Bank <i class="fa fa-credit-card" aria-hidden="true"></i></h2>
     <div ng-controller="bankCtrl">
         <div class="p-3" style="border: 1px black solid;">
-            Your current bank : 
+            Your current bank : <button class="btn btn-primary btn-sm" ng-click="goTo('addBank')">Add <i class="fa fa-plus" aria-hidden="true"></i></button>
+            <div>
+                
+            </div>
+            <!--
             <div class="mt-2" ng-if="typeBank">
                 <b>Type :</b> {{typeBank}}<br>
                 <b>Mail :</b> {{mailBank}}<br>
                 <b>Expires date :</b> {{expBank}}
             </div>
+            -->
         </div>
+        <!--
         <div class="p-3 mt-2" style="border: 1px black solid;">
             Change your bank? <input type="checkbox" class="checkbox-inline" ng-model="changeBank">
             <div ng-if="changeBank">
@@ -54,6 +60,7 @@
                 </div>
             </div>
         </div>
+        -->
     </div>
 </body>
 </html>

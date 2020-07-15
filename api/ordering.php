@@ -39,9 +39,9 @@
             $groups = $value["groups"];
             $winner = 0;
             $profit = 0;
+            $gagne = 0;
             $res = $database->selectMore("t_order","*","id_user='$id' and status='current' and groups='$groups '");
             foreach ($res as $n) {
-                $gagne = 0;
                 $selected = $n["selected"];
                 $amount = $n["amount"];
                 $idOrder = $n["numOrder"];
@@ -55,10 +55,10 @@
                             "is_win" => 1,
                             "status" => "done"
                         ];
+                        $update = $database->update('t_order',$data,"numOrder='$idOrder'");
                         $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
                         $amount_winning = $amount_winning + $getBalance;
                         $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
-                        $database->update('t_order',$data,"numOrder='$idOrder'");
                         $params = $database->select("t_params","*","id=1");
                         $winner =  $params["nbr_winner"] + 1;
                         $profit =  $params["wallet_profit"] - $amount_winning;
@@ -76,11 +76,10 @@
                         ];
                         $database->insert("t_recharge",$data);
                         $gagne++;
+                        echo $update;
                     } else {
                         // losing
                         $data = [
-                            "amount_winning" => 0,
-                            "is_win" => 0,
                             "status" => "done"
                         ];
                         $database->update('t_order',$data,"numOrder='$idOrder'");
@@ -91,135 +90,138 @@
                             "$groups" => $colorWinner." (".$numberWinner.")"
                         ];
                         $database->update('t_params',$data,"id=1");
-                        echo "lose";
                     }
                 } else if ($n["type"] == "C") {
-                        if ($selected == $colorWinner) {
-                            // winning
-                            if ($amount < 50) {
-                                $amount_winning = $amount * 1.5;
-                            } else if ($amount > 100) {
-                                $amount_winning = $amount * 2;
-                            }
-                            $data = [
-                                "id_winner_period" => $period,
-                                "amount_winning" => $amount_winning,
-                                "is_win" => 1,
-                                "status" => "done"
-                            ];
-                            $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
-                            $amount_winning = $amount_winning + $getBalance;
-                            $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
-                            $database->update('t_order',$data,"numOrder='$idOrder'");
-                            $params = $database->select("t_params","*","id=1");
-                            $winner =  $params["nbr_winner"] + 1;
-                            $profit =  $params["wallet_profit"] - $amount_winning;
-                            $data = [
-                                "wallet_profit" => $profit,
-                                "nbr_winner" => $winner,
-                                "$groups" => $colorWinner." (".$numberWinner.")"
-                            ];
-                            $database->update('t_params',$data,"id=1");
-                            $data = [
-                                "price" => $amount_winning,
-                                "type" => "Reward",
-                                "id_user" => $id,
-                                "date" => date("Y-m-d")
-                            ];
-                            $database->insert("t_recharge",$data);
-                            $gagne++;
-                        } if (($selected == "GREEN" && $colorWinner == "TIN,GREEN") || ($selected == "ORANGE" && $colorWinner == "TIN,ORANGE")) {
-                            // winning
-                            if ($amount < 50) {
-                                $amount_winning = $amount * 1.25;
-                            } else if ($amount > 100) {
-                                $amount_winning = $amount * 1.4;
-                            }
-                            $data = [
-                                "id_winner_period" => $period,
-                                "amount_winning" => $amount_winning,
-                                "is_win" => 1,
-                                "status" => "done"
-                            ];
-                            $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
-                            $amount_winning = $amount_winning + $getBalance;
-                            $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
-                            $database->update('t_order',$data,"numOrder='$idOrder'");
-                            $params = $database->select("t_params","*","id=1");
-                            $winner =  $params["nbr_winner"] + 1;
-                            $profit =  $params["wallet_profit"] - $amount_winning;
-                            $data = [
-                                "wallet_profit" => $profit,
-                                "nbr_winner" => $winner,
-                                "$groups" => $colorWinner." (".$numberWinner.")"
-                            ];
-                            $database->update('t_params',$data,"id=1");
-                            $data = [
-                                "price" => $amount_winning,
-                                "type" => "Reward",
-                                "id_user" => $id,
-                                "date" => date("Y-m-d")
-                            ];
-                            $database->insert("t_recharge",$data);
-                            $gagne++;
-                        } else if (($selected == "TIN" && $colorWinner == "TIN,GREEN") || ($selected == "TIN" && $colorWinner == "TIN,ORANGE")) {
-                            // winning up
-                            if ($amount < 100) {
-                                $amount_winning = $amount * 2.8;
-                            } else if ($amount > 100) {
-                                $amount_winning = $amount * 4.5;
-                            }
-                            $data = [
-                                "id_winner_period" => $period,
-                                "amount_winning" => $amount_winning,
-                                "is_win" => 1,
-                                "status" => "done"
-                            ];
-                            $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
-                            $amount_winning = $amount_winning + $getBalance;
-                            $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
-                            $database->update('t_order',$data,"numOrder='$idOrder'");
-                            $params = $database->select("t_params","*","id=1");
-                            $winner =  $params["nbr_winner"] + 1;
-                            $profit =  $params["wallet_profit"] - $amount_winning;
-                            $data = [
-                                "wallet_profit" => $profit,
-                                "nbr_winner" => $winner,
-                                "$groups" => $colorWinner." (".$numberWinner.")"
-                            ];
-                            $database->update('t_params',$data,"id=1");
-                            $data = [
-                                "price" => $amount_winning,
-                                "type" => "Reward",
-                                "id_user" => $id,
-                                "date" => date("Y-m-d H:i:s")
-                            ];
-                            $database->insert("t_recharge",$data);
-                            $gagne++;
-                        } else {
-                            // losing
-                            $data = [
-                                "amount_winning" => 0,
-                                "is_win" => 0,
-                                "status" => "done"
-                            ];
-                            $database->update('t_order',$data,"numOrder='$idOrder'");
-                            $params = $database->select("t_params","*","id=1")["wallet_profit"];
-                            $profit = $amount + $params;
-                            $data = [
-                                "$groups" => $colorWinner." (".$numberWinner.")",
-                                "wallet_profit" => $profit
-                            ];
-                            $database->update('t_params',$data,"id=1");
-                            echo "lose";
+                    $amount_winning = 0;
+                    if ($selected == $colorWinner) {
+                        // winning
+                        $amount_winning = 0;
+                        if ($amount <= 100) {
+                            $amount_winning = $amount * 1.5;
+                        } else if ($amount > 100) {
+                            $amount_winning = $amount * 2;
                         }
+                        $data = [
+                            "id_winner_period" => $period,
+                            "amount_winning" => $amount_winning,
+                            "is_win" => 1,
+                            "status" => "done"
+                        ];
+                        $update = $database->update('t_order',$data,"numOrder='$idOrder'");
+                        $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
+                        $amount_winning = $amount_winning + $getBalance;
+                        $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
+                        $params = $database->select("t_params","*","id=1");
+                        $winner =  $params["nbr_winner"] + 1;
+                        $profit =  $params["wallet_profit"] - $amount_winning;
+                        $data = [
+                            "wallet_profit" => $profit,
+                            "nbr_winner" => $winner,
+                            "$groups" => $colorWinner." (".$numberWinner.")"
+                        ];
+                        $database->update('t_params',$data,"id=1");
+                        $data = [
+                            "price" => $amount_winning - $getBalance,
+                            "type" => "Reward",
+                            "id_user" => $id,
+                            "date" => date("Y-m-d")
+                        ];
+                        $database->insert("t_recharge",$data);
+                        $gagne++;
+                        echo $update;
+                    } if (($selected == "GREEN" && $colorWinner == "TIN,GREEN") || ($selected == "ORANGE" && $colorWinner == "TIN,ORANGE")) {
+                        // winning
+                        $amount_winning = 0;
+                        if ($amount <= 100) {
+                            $amount_winning = $amount * 1.25;
+                        } else if ($amount > 100) {
+                            $amount_winning = $amount * 1.4;
+                        }
+                        $data = [
+                            "id_winner_period" => $period,
+                            "amount_winning" => $amount_winning,
+                            "is_win" => 1,
+                            "status" => "done"
+                        ];
+                        $update = $database->update('t_order',$data,"numOrder='$idOrder'");
+                        $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
+                        $amount_winning = $amount_winning + $getBalance;
+                        $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
+                        $params = $database->select("t_params","*","id=1");
+                        $winner =  $params["nbr_winner"] + 1;
+                        $profit =  $params["wallet_profit"] - $amount_winning;
+                        $data = [
+                            "wallet_profit" => $profit,
+                            "nbr_winner" => $winner,
+                            "$groups" => $colorWinner." (".$numberWinner.")"
+                        ];
+                        $database->update('t_params',$data,"id=1");
+                        $data = [
+                            "price" => $amount_winning-$getBalance,
+                            "type" => "Reward",
+                            "id_user" => $id,
+                            "date" => date("Y-m-d")
+                        ];
+                        $database->insert("t_recharge",$data);
+                        $gagne++;
+                        echo $update ;
+                    } else if (($selected == "TIN" && $colorWinner == "TIN,GREEN") || ($selected == "TIN" && $colorWinner == "TIN,ORANGE")) {
+                        // winning up
+                        $amount_winning = 0;
+                        if ($amount <= 100) {
+                            $amount_winning = $amount * 2.8;
+                        } else if ($amount > 100) {
+                            $amount_winning = $amount * 4.5;
+                        }
+                        $data = [
+                            "id_winner_period" => $period,
+                            "amount_winning" => $amount_winning,
+                            "is_win" => 1,
+                            "status" => "done"
+                        ];
+                        $update = $database->update('t_order',$data,"numOrder='$idOrder'");
+                        $getBalance = $database->select("t_user_params","*","id_user='$id'")["balance"];
+                        $amount_winning = $amount_winning + $getBalance;
+                        $database->update("t_user_params",["balance" => $amount_winning],"id_user='$id'");
+                        $params = $database->select("t_params","*","id=1");
+                        $winner =  $params["nbr_winner"] + 1;
+                        $profit =  $params["wallet_profit"] - $amount_winning;
+                        $data = [
+                            "wallet_profit" => $profit,
+                            "nbr_winner" => $winner,
+                            "$groups" => $colorWinner." (".$numberWinner.")"
+                        ];
+                        $database->update('t_params',$data,"id=1");
+                        $data = [
+                            "price" => $amount_winning - $getBalance,
+                            "type" => "Reward",
+                            "id_user" => $id,
+                            "date" => date("Y-m-d H:i:s")
+                        ];
+                        $database->insert("t_recharge",$data);
+                        $gagne++;
+                        echo $update ;
+                    } else {
+                        // losing
+                        $data = [
+                            "status" => "done"
+                        ];
+                        $database->update('t_order',$data,"numOrder='$idOrder'");
+                        $params = $database->select("t_params","*","id=1")["wallet_profit"];
+                        $profit = $amount + $params;
+                        $data = [
+                            "$groups" => $colorWinner." (".$numberWinner.")",
+                            "wallet_profit" => $profit
+                        ];
+                        $database->update('t_params',$data,"id=1");
+                    }
                 }   
             }
-            if ($gagne>0) {
-                echo "win";
-            } else {
-                echo "lose";
-            }
+            // if ($gagne>0) {
+            //     echo "win";
+            // } else {
+            //     echo "lose";
+            // }
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {
         echo "Unauthorized";
