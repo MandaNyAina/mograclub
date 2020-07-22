@@ -1,44 +1,26 @@
 <?php
     require '../config/constant.php';
+    require_once('paiement/api.php');
     $key = parse_ini_file("../config/config.ini")["key_encrypt"];
-    if (is_form_valid(@$_GET['id']) && is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
-        $postdata = file_get_contents("php://input");
-        $value = floatval(json_decode($postdata));
-        if ($value) {
-            $data = [
-                "price" => $value,
-                "type" => "Recharge",
-                "id_user" => $_GET['id'],
-                "date" => date("Y-m-d H:i:s")
-            ];
-            $database->insert("t_recharge",$data);
-            $id = $_GET['id'];
-            $deduct = 2;
-            $oldBalance = floatval($database->select('t_user_params',"*","id_user='$id'")['balance']);
-            $pay = $database->select('t_user_params',"*","id_user='$id'")['first_pay'];
-            if ($pay == 0) {
-                $deduct = 5;
-            }
-            $params = $database->select("t_params","*","id=1")["wallet"];
-            $params += $deduct;
-            $database->update("t_params",["wallet" => $params],"id=1");
-            $value = ($oldBalance + $value) - $deduct;
-            $data = [
-                "first_pay" => 1,
-                "balance" => $value
-            ];
-            $update = $database->update('t_user_params',$data,"id_user='$id'");  
-            if ($update) {
-                echo 'Ok';
-            } else {
-                echo 'Ko';
-            }
-        } else {
-            echo 'Value empty';
+    if (is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
+        $id = $_SESSION['user_loggeg']['id'];
+        $amount = $_POST['recharge'];
+        $userRow = $database->select("t_user_info","*","id='$id'");
+        $user = array();
+        $user['customerName'] = $userRow['first_name']." ".$userRow['last_name'];
+        $user['customerEmail'] = $userRow['mail'];
+        $user['customerPhone'] = $userRow['phone'];
+        $order = array();
+        $order['orderAmount'] = $amount;
+        $order['orderNote'] = "Recharge";
+        $order['orderCurrency'] = "INR";
+        try {
+            $payement = new Payment();
+            $send = $payement->pay($user,$order);
+        } catch (Exception $e) {
+            echo "Payement error => ".$e;
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {
-        echo "Unauthorized";
-    } else if (!is_form_valid(@$_GET['id'])) {
-        echo "Invalid ID";
+        echo $_GET['key'];
     }
 ?>

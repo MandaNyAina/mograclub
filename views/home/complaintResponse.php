@@ -40,7 +40,7 @@
                     <button ng-disabled="item.parent.solved == 1" ng-click="solved(item.parent.id)" class="btn btn-success w-100 btn-sm mt-2 mb-2">Solved</button>
                 </div>
                 <div ng-if="item.response.length == 0" class="bg-light text-center m-2 p-2">
-                    Pas de reponse
+                    No answer
                 </div>
 
                 <div ng-repeat="res in item.response track by $index">

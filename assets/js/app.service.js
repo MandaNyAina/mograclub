@@ -107,9 +107,6 @@ app.service('adminService', function ($http) {
     this.getAllUser = () => {
         return $http.get(`${host_protocole}${host_server}/api/allUser.php?key=${key}`);
     }
-    this.sendMoney = () => {
-
-    }
 })
 
 app.service('passwordService', function ($http) {
@@ -159,6 +156,15 @@ app.service("taskService", function ($http) {
     }
     this.getAllTaskById = (id) => {
         return $http.get(`${host_protocole}${host_server}/api/getTask.php?key=${key}&id=${id}`);
+    }
+    this.getAll= (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/taskApi.php?key=${key}&id=${id}&type=all`);
+    }
+    this.getTask = (id, idTask) => {
+        return $http.get(`${host_protocole}${host_server}/api/taskApi.php?key=${key}&id=${id}&idTask=${idTask}&type=get`);
+    }
+    this.validityTask = (id) => {
+        return $http.get(`${host_protocole}${host_server}/api/taskApi.php?key=${key}&id=${id}&type=active`);
     }
 })
 

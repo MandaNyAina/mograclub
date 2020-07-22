@@ -30,13 +30,14 @@
         </table>
         <table class="table table-bordered mimtable bg-light" ng-controller="promotionCtrl">
             <tr>
-                <td class="w-50 text-center">
+                <!-- <td class="w-50 text-center">
                     Your bonus : <span ng-bind="bonus">Loading ...</span> <i class="fas fa-rupee-sign    "></i>
                     <div>
                         <button ng-click="convert(bonus)" class="btn btn-primary btn-sm mt-2">Add to your balance</button>
                     </div>
-                </td>
+                </td> -->
                 <td class="w-50">
+                    <div class="text-center">The promotion bonus will be send in your balance. </div> 
                     Active member today : <span ng-bind="active"></span><br>
                     Total people : <span ng-bind="people"></span><br>
                     Contribution : <span ng-bind="contribution"></span><i class="fas fa-rupee-sign"></i>

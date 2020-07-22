@@ -12,9 +12,61 @@
     <h2 class="text-center">My Bank <i class="fa fa-credit-card" aria-hidden="true"></i></h2>
     <div ng-controller="bankCtrl">
         <div class="p-3" style="border: 1px black solid;">
-            Your current bank : <button class="btn btn-primary btn-sm" ng-click="goTo('addBank')">Add <i class="fa fa-plus" aria-hidden="true"></i></button>
-            <div>
-                
+            Your bank : 
+            <div ng-if="!setting">
+                <button class="btn btn-primary btn-sm w-100" ng-click="goTo('addBank')">Add <i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+            
+            <div ng-if="setting" class="mt-3">
+                <form name="myForm" method="POST" action="../../controller/paiement/paiement.controller.php?type=update">
+                    <div class="form-group">
+                        <label for="nameAcc">Actual name</label>
+                        <input required type="text" name="nameAccount" id="nameAccount" class="form-control text-center" placeholder="Actual name" ng-model="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="ifcs">IFSC code</label>
+                        <input required type="text" name="ifcs" id="ifcs" class="form-control text-center" placeholder="IFSC code"  ng-model="ifcs">
+                    </div>
+                    <div class="form-group">
+                        <label for="numberAcc">Account number</label>
+                        <input required type="text" name="numberAcc" id="numberAcc" class="form-control text-center" placeholder="Account number"  ng-model="number">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input required type="text" name="state" id="state" class="form-control text-center" placeholder="State"  ng-model="state">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" name="city" id="city" class="form-control text-center" placeholder="City"  ng-model="city">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input required type="text" name="address" id="address" class="form-control text-center" placeholder="Address"  ng-model="address">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile number</label>
+                        <input type="text" name="mobile" id="mobile" class="form-control text-center" placeholder="Mobile number"  ng-model="mobile">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailAcc">Email</label>
+                        <input required type="text" name="emailAcc" id="emailAcc" class="form-control text-center" placeholder="Email"  ng-model="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="otpverif">OTP verication</label>
+                        <div class="input-group">
+                            <input required type="text" class="form-control text-center" ng-model="otpverif" ng-change="checkValidator(otpverif)" name="otpverif">
+                            <div class="input-group-append">
+                                <button ng-disabled="loader || myForm.emailAcc.$invalid" ng-click="sendMail(email)" type="button" class="btn btn-success">OTP <div ng-if="loader" class="loader">Loading...</div></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button ng-disabled="myForm.$invalid || !otpok" type="submit" class="btn btn-success w-100">Save</button>
+                    </div>
+                    <div class="form-group">
+                        <a href="../../controller/paiement/paiement.controller.php?type=delete" class="btn btn-danger w-100">Delete <i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                </form>
             </div>
             <!--
             <div class="mt-2" ng-if="typeBank">

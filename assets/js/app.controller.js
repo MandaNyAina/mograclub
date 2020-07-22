@@ -341,7 +341,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                 (res) => {
                     colorWinner[pd] = res.data.row.result;
                     numberWinner[pd] = res.data.row.number;
-                    console.log(res)
+                    // console.log(res)
                 }
             )
             i++;
@@ -541,7 +541,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                     }
                     appService.validateOrdering(res.data, data).then(
                         (res) => {
-                            console.log(res)
+                            // console.log(res)
                             if (res.data == "win") {
                                 Swal.fire({
                                     position: 'top-end',
@@ -1013,7 +1013,7 @@ app.controller('adminCtrl', (adminService, userService, appService, $scope, comp
         $scope.results = [];
         $scope.users.map(user => {
             if (value != "") {
-                if(user.first_name.toLowerCase().includes(value) || user.last_name.toLowerCase().includes(value) || user.phone == value || user.mail.toLowerCase() == value) {
+                if(user.first_name.toLowerCase().includes(value) || user.id == value || user.last_name.toLowerCase().includes(value) || user.phone == value || user.mail.toLowerCase() == value) {
                     $scope.results.push(user);
                 }
             } else {
@@ -1164,18 +1164,79 @@ app.controller('addressCtrl', (userService, $scope) => {
     }
 })
 
-app.controller("bankCtrl", (userService, $scope) => {
-    $scope.typeValue = "";
-    userService.getIdLogged().then(
-        
-    )
-    $scope.saveBankPaypal = (e) => {
+app.controller("bankCtrl", (userService, $scope, appService) => {
+    $scope.bankUser = [];
+    $scope.setting = false;
+    $scope.loader = false;
+    $scope.otpok = false;
+    let code = generateCode(6);
+    const checkBank = () => {
+        userService.getIdLogged().then(
+            (res) => {
+                userService.getBank(res.data).then(
+                    (res) => {
+                        console.log(res.data)
+                        if (res.data) {
+                            $scope.setting = true;
+                            $scope.name = res.data.name,
+                            $scope.ifcs = res.data.ifsc,
+                            $scope.vpa = res.data.vpa,
+                            $scope.number = res.data.bankAccount,
+                            $scope.state = res.data.state,
+                            $scope.city = res.data.city,
+                            $scope.address = res.data.state,
+                            $scope.mobile = res.data.phone,
+                            $scope.email = res.data.email
+                        } else {
+                            console.log("here")
+                            $scope.setting = false;
+                        }
+                    },
+                    (err) => {
+                        console.log(err);
+                    }
+                )
+            }
+        )
+    }
+    checkBank()
+    $scope.sendMail = (address) => {
+        let data = {
+            object: "OTP Verification | MograClub",
+            to: address,
+            message: `
+            Hello, your validation key is ${code}
+            `
+        }
+        $scope.loader = true;
+        appService.sendMail(data).then(
+            (res) => {
+                $scope.loader = false;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    text: 'Send !',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        )
+    }
+    $scope.checkValidator = (c) => {
+        if (c == code) {
+            $scope.otpok = true;
+        } else {
+            $scope.otpok = false;
+        }
+    }
+    $scope.views = (e) => {
         console.log(e)
     }
 })
 
 app.controller("walletCtrl", ($scope, convertService, userService) => {
     $scope.selected = "c";
+    $scope.senderLoader = false;
     const recharge = () => {
         userService.getIdLogged().then(
             (res) => {
@@ -1202,10 +1263,12 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
         }
     }
     $scope.withdrawal = (id,e) => {
+        $scope.senderLoader = true;
         convertService.withdrawal(id,e).then(
-            (res) => {
-                // console.log(res)
-                if (res.data == "Ok") {
+            (res) => { 
+                console.log(res)
+                $scope.senderLoader = false;
+                if (res.data == "SUCCESS") {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -1216,13 +1279,29 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
                     $scope.change = ""
                     window.location.href = "../../index.php"
                     recharge()
-                } else {
+                } else if (res.data == "ERROR") {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'error',
-                        text: 'Error when sending, the balance is low after deducting service charge',
+                        text: 'Error when withdrawal, verify your bank account',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 5000
+                    })
+                } else if (res.data == "PENDING") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        text: 'The request is getting processed',
+                        showConfirmButton: false,
+                        timer: 5000
+                    })
+                } else if (res.data == "FAILED") {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        text: 'Error when withdrawal, contact the seller support at service@mogra.club',
+                        showConfirmButton: false,
+                        timer: 5000
                     })
                 }
             }
@@ -1324,33 +1403,33 @@ app.controller("promotionCtrl", ($scope, appService, userService) => {
             }
         )
     }, 500)
-    $scope.convert = (data) => {
-        userService.getIdLogged().then(
-            (res) => {
-                appService.convertBonus(res.data, data).then(
-                    (res) => {
-                        if (res.data == "ok") {
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                text: 'The bonus is transfered in your balance',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                        } else {
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'error',
-                                text: 'Error',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                        }
-                    }
-                )
-            }
-        )
-    }
+    // $scope.convert = (data) => {
+    //     userService.getIdLogged().then(
+    //         (res) => {
+    //             appService.convertBonus(res.data, data).then(
+    //                 (res) => {
+    //                     if (res.data == "ok") {
+    //                         Swal.fire({
+    //                             position: 'center',
+    //                             icon: 'success',
+    //                             text: 'The bonus is transfered in your balance',
+    //                             showConfirmButton: false,
+    //                             timer: 1500
+    //                         })
+    //                     } else {
+    //                         Swal.fire({
+    //                             position: 'center',
+    //                             icon: 'error',
+    //                             text: 'Error',
+    //                             showConfirmButton: false,
+    //                             timer: 1500
+    //                         })
+    //                     }
+    //                 }
+    //             )
+    //         }
+    //     )
+    // }
     $scope.sendMail = (address) => {
         let data = {
             object: "Invitation code",
@@ -1380,8 +1459,57 @@ app.controller("promotionCtrl", ($scope, appService, userService) => {
     }
 })
 
-app.controller("taskCtrl", ($scope, taskService) => {
+app.controller("taskCtrl", ($scope, taskService, userService, appService) => {
     $scope.allTask = [];
+    $scope.nav = 1
+    $scope.currentExist = false;
+    let l;
+    $scope.all = [];
+    $scope.finish = [];
+    let link = appService.getHost();
+    $scope.links = `${link}/views/registration/registre.php?key=`;
+    userService.getIdLogged().then(
+        (res) => {
+            taskService.getAll(res.data).then(
+                (res) => {
+                    $scope.all = res.data.all
+                    $scope.finish = res.data.finish
+                    console.log(res.data)
+                }
+            )
+        }
+    )
+    $scope.getTask = (idTask) => {
+        userService.getIdLogged().then(
+            (res) => {
+                taskService.validityTask(res.data).then(
+                    (r) => {
+                        if (r.data.length > 0) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                text: 'Finish your current task please',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        } else {
+                            taskService.getTask(res.data, idTask).then(
+                                (res) => {
+                                    console.log(res);
+                                }
+                            )
+                        }
+                    }
+                )
+            }
+        )
+    }
+    $scope.navTo = (e) => {
+        $scope.nav = e
+        l = e==1?2:1;
+        document.getElementById(`btn${e}`).className = "btn btn-outline-primary";
+        document.getElementById(`btn${l}`).className = "btn btn-primary";
+    }
     taskService.getAllTask().then(
         (res) => {
             $scope.allTask = res.data;

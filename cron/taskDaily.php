@@ -1,5 +1,5 @@
 <?php
-    require '../config/constant.php';
+    require_once $_SERVER['DOCUMENT_ROOT'].'/config/constant.php';
     $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")+1, date("Y"));
     $today = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
     $data = [

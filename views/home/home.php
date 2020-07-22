@@ -65,6 +65,12 @@
                 <i class="fa fa-arrow-right float-right" aria-hidden="true"></i>
             </td>
         </tr>
+        <tr ng-click="goTo('about')">
+            <td>
+                About Us
+                <i class="fa fa-arrow-right float-right" aria-hidden="true"></i>
+            </td>
+        </tr>
         <tr ng-click="redirectTo('../../controller/delog/delog.controller.php')">
             <td>
                 Sign out    

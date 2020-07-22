@@ -1,9 +1,18 @@
 <?php 
     require '../../config/constant.php';
+    require '../../api/taskServiceApi.php';
     
     if (is_form_valid($_POST['fname']) && is_form_valid($_POST['lname']) && is_form_valid($_POST['mail']) && is_form_valid($_POST['phone']) && is_form_valid($_POST['username']) && is_form_valid($_POST['password'])  && is_form_valid($_POST['invite'])) {
         $inv = $_POST['invite'];
-        $verify = $database->select("t_reward","*","id_para='$inv'");
+        $promo_value = $database->select("t_reward","*","id_para='$inv'");
+        $task = new Task();
+        $task_value = $task->exist($inv);
+        $verify = 0;
+        if ($promo_value) {
+            $verify = 1;
+        } else if ($task_value)  {
+            $verify = 1;
+        }
         $check = $database->select("t_user","username","username='".$_POST['username']."'");
         if (!$check && $verify) {
             $nbr_pers = intval($verify['nbr_pers']) + 1;
@@ -20,6 +29,9 @@
             if ($save) {
                 $id_info = randomValue(50);
                 $code = randomValue(5);
+                if ($task_value) {
+                    $task->valide_1($inv, $id_info);
+                }
                 $msg = "
                 <h2>Hello</h2>
                 Your account activation key is <b>$code</b><br/> <br>

@@ -4,10 +4,28 @@ app.config(function($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 });
 
-app.config($routeProvider => {
+app.config(($routeProvider)=> {
     $routeProvider
     .when("/",{
         templateUrl: "../home/home.php"
+    })
+    .when("/about",{
+        templateUrl: "../home/about.php"
+    })
+    .when("/about/privacy",{
+        templateUrl: "../home/privacy.php"
+    })
+    .when("/about/refund",{
+        templateUrl: "../home/refund.php"
+    })
+    .when("/about/risk",{
+        templateUrl: "../home/risk.php"
+    })
+    .when("/about/about",{
+        templateUrl: "../home/about2.php"
+    })
+    .when("/about/contact",{
+        templateUrl: "../home/contact.php"
     })
     .when("/addBank",{
         templateUrl: "../home/addBank.php"
@@ -56,6 +74,9 @@ app.config($routeProvider => {
     })
     .when("/agate",{
         templateUrl: "../home/agate.php"
+    })
+    .when("/task/mytask",{
+        templateUrl: "../home/mytask.php"
     })
     .when("/security", {
         templateUrl: "../home/security.php"

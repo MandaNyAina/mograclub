@@ -150,59 +150,6 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 30%;">Default payment</td>
-                <td>
-                    <select required class="form-control" name="defaultPay">
-                        <option value="paypal">Paypal</option>
-                        <option value="gpay">Google pay</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" class="text-center">
-                    <button class="btn btn-success" type="submit">Save</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-    <form action="../../controller/admin/admin.controller.php?form=paypal" method="post">
-        <table class="table table-borderless">
-            <tr>
-                <td colspan="3" class="text-center bg-light">
-                    Your Paypal account <i class="fab fa-paypal"></i>
-                </td>
-            </tr>
-            <tr>
-                <td>Adress mail</td>
-                <td colspan="2"><input type="email" required class="form-control" name="paypalMail" ng-model="paypalMail"></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td colspan="2"><input type="password" required class="form-control" name="paypalPassword" ng-model="paypalPassword"></td>
-            </tr>
-            <tr>
-                <td colspan="3" class="text-center">
-                    <button class="btn btn-success" type="submit">Save</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-    <form action="../../controller/admin/admin.controller.php?form=gpay" method="post">
-        <table class="table table-borderless">
-            <tr>
-                <td colspan="3" class="text-center bg-light">
-                    Your Google Pay Account <i class="fab fa-google"></i>
-                </td>
-            </tr>
-            <tr>
-                <td>Adress mail</td>
-                <td colspan="2"><input type="email" required class="form-control" name="gpayMail" ng-model="gpayMail"></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td colspan="2"><input type="password" required class="form-control" name="gpayPassword" ng-model="gpayPassword"></td>
-            </tr>
-            <tr>
                 <td colspan="3" class="text-center">
                     <button class="btn btn-success" type="submit">Save</button>
                 </td>

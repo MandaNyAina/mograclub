@@ -110,8 +110,4 @@
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
-
-    function contains($needle, $haystack) {
-        return strpos($haystack, $needle) !== false;
-    }
 ?>

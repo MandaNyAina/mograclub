@@ -4,6 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .lds-facebook {
+  position: absolute;
+  align-content: center;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 15px;
+  width: 16px;
+  background: #fcf;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+    </style>
 </head>
 <body>
     <div>
@@ -19,7 +58,10 @@
         <div class="bg-light mt-5 p-3 w-75 text-center mx-auto" style="font-weight: 25px;" ng-if="selected == 'c'">
             You have {{balanceValue}} <i class="fas fa-rupee-sign"></i> in your wallet <br>
             <a ng-click="choiceMenu('')" class="btn btn-warning btn-sm mt-3" href="#!/recharge">Add <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-            <button class="btn btn-warning btn-sm mt-3" data-toggle="modal" data-target="#exampleModalCenter1">Withdrawal</button>
+            <button ng-disabled="senderLoader" class="btn btn-warning btn-sm mt-3" data-toggle="modal" data-target="#exampleModalCenter1">Withdrawal</button>
+            <div ng-if="senderLoader" class="position-absolute d-block mx-auto">
+                <div class="lds-facebook"><div></div><div></div><div></div></div>
+            </div>
         </div>
 
         <div ng-if="selected == 'h'">

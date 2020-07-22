@@ -59,17 +59,15 @@
                     <td><input required name="lname" id="lname" type="text" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>E-mail adress</td>
+                    <td>E-mail address</td>
                     <td>
                         <input required ng-change="changeMail()" name="mail" id="mail" type="email" ng-model="mail" class="form-control">
                     </td>
                 </tr>
                 <tr>
-                    <td>Your adress</td>
+                    <td>Your address</td>
                     <td>
-                        <textarea required name="aname" id="aname" type="text" class="form-control">
-
-                        </textarea>
+                        <textarea required name="aname" id="aname" type="text" class="form-control"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -79,7 +77,7 @@
                             <div class="input-group-prepend w-25">
                                 <select required ng-model="indicatif" name="indicatif" style="position:relative" name="" id="" class="input-group-text custom-select float-left">
                                     <option value="">Country</option>
-                                    <option value="{{item.dial_code}}" ng-repeat="item in indicatifList | orderBy:'name'">{{item.dial_code}} ({{item.code}}) - {{item.name}}</option>
+                                    <option value="{{item.dial_code}}" ng-repeat="item in indicatifList | orderBy:'name'"> {{item.dial_code}} {{item.code}} {{item.name}}</option>
                                 </select>
                             </div>
                             <input required name="phone" id="phone" type="number" ng-model="phone" maxlength="10" minlength="9" class="form-control">
@@ -94,14 +92,14 @@
                     <td>Password</td>
                     <td>
                         <input ng-change="passwordChange()" ng-model="password" name="password" id="password" type="password" class="form-control {{PassclassPass}}">
-                        <span ng-show="myForm.password.$touched && errorPassLength" class="text-danger" style="margin-top: -2px;font-size:10px">The password length must be 8 characters</span>
+                        <span ng-show="myForm.password.$touched && errorPassLength" class="text-danger" style="margin-top: -2px;font-size:10px" ng-bind="'The password length must be 8 characters'"></span>
                     </td>
                 </tr>
                 <tr>
                     <td>Confirm</td>
                     <td>
                         <input ng-change="passwordAbort()" ng-model="confirm" name="confirm" id="confirm" type="password" class="form-control {{PassConfclassPass}}">
-                        <span ng-show="myForm.confirm.$touched && errorNotMatch" class="text-danger" style="margin-top: -2px;font-size:10px">The password is not match</span>
+                        <span ng-show="myForm.confirm.$touched && errorNotMatch" class="text-danger" style="margin-top: -2px;font-size:10px" ng-bind="'The password is not match'"></span>
                     </td>
                 </tr>
                 <tr>
