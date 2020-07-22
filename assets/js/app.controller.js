@@ -677,7 +677,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
         let timerInterval
         Swal.fire({
         html: 'Wait please',
-        timer: 4000,
+        timer: 5000,
         timerProgressBar: true,
         onBeforeOpen: () => {
             Swal.showLoading()
