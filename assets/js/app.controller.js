@@ -674,6 +674,32 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
     }
     $scope.goTo = (url) => {
         $location.path(url);
+        let timerInterval
+        Swal.fire({
+        html: 'Wait please',
+        timer: 4000,
+        timerProgressBar: true,
+        onBeforeOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+            const content = Swal.getContent()
+            if (content) {
+                const b = content.querySelector('b')
+                if (b) {
+                b.textContent = Swal.getTimerLeft()
+                }
+            }
+            }, 100)
+        },
+        onClose: () => {
+            clearInterval(timerInterval)
+        }
+        }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log('I was closed by the timer')
+        }
+        })
     }
     $scope.redirectTo = (url) => {
         window.location = url;
