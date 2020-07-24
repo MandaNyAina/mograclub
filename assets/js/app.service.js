@@ -1,8 +1,8 @@
 import {app} from '../js/app.module.js';
 
 const key = "SFkqSL99qLk9SSeYL9kqeS9L3eS99q39"
-const host_protocole = "https://"
-const host_server = "mogra.club"
+const host_protocole = "http://"
+const host_server = "localhost:8000"
 
 app.service('userService', function ($http) {
     this.activeProme = (id) => {
@@ -53,8 +53,8 @@ app.service('appService', function ($http) {
     this.resetAll = () => {
         return $http.get(`${host_protocole}${host_server}/api/reOrder.php?key=${key}`);
     }
-    this.sendServiceFee = (data) => {
-        return $http.post(`${host_protocole}${host_server}/api/sendProfit.php?key=${key}`,data);
+    this.sendServiceFee = (data, id) => {
+        return $http.post(`${host_protocole}${host_server}/api/sendProfit.php?key=${key}&id=${id}`,data);
     }
     this.adjust = (groups, period, win, num) => {
         return $http.get(`${host_protocole}${host_server}/api/micmac.php?key=${key}&groups=${groups}&period=${period}&winC=${win}&winN=${num}`);
@@ -72,7 +72,7 @@ app.service('appService', function ($http) {
         return $http.get(`${host_protocole}${host_server}/api/getalldone.php?key=${key}&groups=${groups}&choice=final`);
     }
     this.randomize = (groups, period) => {
-        return $http.post(`${host_protocole}${host_server}/api/generate.php?key=${key}&groups=${groups}&period=${period}`);
+        return $http.post(`${host_protocole}${host_server}/api/generate.php?key=${key}&groups=${groups}`);
     }
     this.sendOrdering = (id, data) => {
         return $http.post(`${host_protocole}${host_server}/api/ordering.php?id=${id}&key=${key}&service=ordering`,data);

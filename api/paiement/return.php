@@ -27,7 +27,7 @@
         $oldBalance = floatval($database->select('t_user_params',"*","id_user='$id'")['balance']);
         $pay = $database->select('t_user_params',"*","id_user='$id'")['first_pay'];
         if ($pay == 0) {
-            $deduct = 5;
+            $deduct = 3;
             $task->valide_2($id);
         }
         $params = $database->select("t_params","*","id=1")["wallet"];

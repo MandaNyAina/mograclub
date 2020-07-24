@@ -16,18 +16,20 @@
         $amount = 0;
         $y = 0;
         if ($value > 1500) {
-            $amount = $value - 1500;
-            $y = 1500;
+            $amount = $value - 35;
+            $y = 35;
         } else {
-            $amount = $value - (($value * 4) / 100);
-            $y = (($value * 4) / 100);
+            $amount = $value - (($value * 2) / 100);
+            $y = (($value * 2) / 100);
         }
+        $cashfreeFee = $amount * ((1.75) / 100);
+        $response = [];
         $date = date("Y-m-d H:i:s");
-        $x = $getBalance - $value - $y;
+        $x = $getBalance - $value - $y - $cashfreeFee;
         if ($x > 0) {
             $data['amount'] = $amount;
             $withdrawal = $payment->api("requestTransfer",$data);
-            if ($withdrawal['status'] == "SUCCESS") {
+            if ($withdrawal['api response']['status'] == "SUCCESS") {
                 $database->update("t_user_params",["balance" => $x],"id_user='$id'");
                 $data = [
                     "id_user" => $id,
@@ -36,10 +38,22 @@
                     "date" => $date
                 ];
                 $database->insert("t_recharge",$data);
+                $message = "
+                Withdrawal information,
+                the Cashfree service charge is $cashfreeFee rupees and
+                the MograClub service charge is $y rupees,
+                Thanks for you
+                ";
+                echo $message;
+            } else {
+                $reponse = [
+                    "apiResponse" => $withdrawal['api response'],
+                    "tokenResponse" => $withdrawal['token_reponse']
+                ];
+                echo json_encode($reponse);
             }
-            print_r($withdrawal);
         } else {
-            echo "Ko";
+            echo "The withdrawal amount error, balance low";
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {
         echo "Unauthorized";

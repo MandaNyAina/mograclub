@@ -1,7 +1,7 @@
 <?php
     require '../config/constant.php';
     $key = parse_ini_file("../config/config.ini")["key_encrypt"];
-    if (is_form_valid(@$_GET['period']) && is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
+    if (is_form_valid(@$_GET['key']) && @$_GET['key'] == $key) {
         $color = [
             0 => "GREEN",
             1 => "ORANGE",
@@ -39,20 +39,22 @@
             }
             $i++;
         }
-        sleep(0.2);
+        // sleep(0.2);
         $value = [
             "color" => $randomColor,
             "number" => $randomNumber,
             "groups" => $_GET['groups']
         ];
-        $period = $_GET['period'];
+        // $period = $_GET['period'];
+        $groups = $_GET['groups'];
+        $getPeriod = $database->select("t_winner","*","groups='$groups' and result=0 and number=0 and showing=0")['period'];
         $data = [
             "number" => $randomNumber,
             "result" => $randomColor,
-            "groups" => $_GET['groups'],
+            "groups" => $groups,
             "price" => 0
         ];
-        $database->update('t_winner',$data,"period='$period'");
+        $database->update('t_winner',$data,"period='$getPeriod'");
         echo json_encode($data);
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {
         echo "Unauthorized";

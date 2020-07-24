@@ -74,12 +74,12 @@
                     <td>Phone</td>
                     <td>
                         <div class="input-group">
-                            <div class="input-group-prepend w-25">
+                            <!-- <div class="input-group-prepend w-25">
                                 <select required ng-model="indicatif" name="indicatif" style="position:relative" name="" id="" class="input-group-text custom-select float-left">
                                     <option value="">Country</option>
                                     <option value="{{item.dial_code}}" ng-repeat="item in indicatifList | orderBy:'name'"> {{item.dial_code}} {{item.code}} {{item.name}}</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <input required name="phone" id="phone" type="number" ng-model="phone" maxlength="10" minlength="9" class="form-control">
                         </div>
                     </td>

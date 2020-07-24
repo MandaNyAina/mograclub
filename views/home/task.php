@@ -10,6 +10,9 @@
         <button ng-click="goTo('')" class="btn btn-outline-primary btn-sm"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
     </div>
     <h2 class="text-center">My Task <i class="fas fa-tasks"></i></h2> 
+    <div class="text-center bg-danger mt-3 mb-3 p-3" style="border-radius: 15px;">
+        You will referance money to the balance after 3-4 bussiness days
+    </div>
     <div class="text-center"  style="position: fixed;">
         <button ng-click="goTo('task/mytask')" class="btn btn-success"><i class="fas fa-thumbtack    "></i> My task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></button>
     </div>

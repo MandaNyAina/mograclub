@@ -29,9 +29,6 @@
             if ($save) {
                 $id_info = randomValue(50);
                 $code = randomValue(5);
-                if ($task_value) {
-                    $task->valide_1($inv, $id_info);
-                }
                 $msg = "
                 <h2>Hello</h2>
                 Your account activation key is <b>$code</b><br/> <br>
@@ -65,20 +62,24 @@
                 ];
                 $set_balance = $database->insert("t_user_params",$data);
                 if ($save && $set_balance && $set_reward) {
-                    $_id = $verify['id_user'];
-                    $currentBalance = $database->select("t_user_params","*","id_user='$_id'")['balance'];
-                    $data = [
-                        "balance" => $currentBalance + 15   
-                    ];
-                    $database->update("t_user_params",$data,"id_user='$_id'");
-                    $walletSyst = $database->select("t_params","*","id=1")["wallet_profit"];
-                    $newwalletSyst = $walletSyst - 15;
-                    $database->update("t_params",["wallet_profit" => $newwalletSyst],"id=1");
-                    $data = [
-                        "t_user_property" => $verify['id_user'],
-                        "t_user_rel" => $id_info
-                    ];
-                    $a = $database->insert("t_rel_promotion",$data);
+                    if ($task_value) {
+                        $task->valide_1($inv, $id_info);
+                    } else if ($promo_value) {
+                        $_id = $promo_value['id_user'];
+                        $currentBalance = $database->select("t_user_params","*","id_user='$_id'")['balance'];
+                        $data = [
+                            "balance" => $currentBalance + 15   
+                        ];
+                        $database->update("t_user_params",$data,"id_user='$_id'");
+                        $walletSyst = $database->select("t_params","*","id=1")["wallet_profit"];
+                        $newwalletSyst = $walletSyst - 15;
+                        $database->update("t_params",["wallet_profit" => $newwalletSyst],"id=1");
+                        $data = [
+                            "t_user_property" => $promo_value['id_user'],
+                            "t_user_rel" => $id_info
+                        ];
+                        $a = $database->insert("t_rel_promotion",$data);
+                    }
                     $_SESSION['account_for_validate'] = $id_info;
                     $_SESSION['register_ok'] = true;
                     header("Location:../../views/authentification/login.php");

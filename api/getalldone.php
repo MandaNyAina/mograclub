@@ -12,7 +12,7 @@
             $result = $data;
         } else if ($_GET['choice'] == "prime")  {
             $group = $_GET['groups'];
-            $result = $database->selectMore('t_winner',"*", "groups='$group' and showing = '1'");
+            $result = $database->selectMore('t_winner',"*", "groups='$group' and result != '0' and showing = '1'");
         } else if ($_GET['choice'] == "final")  {
             $group = $_GET['groups'];
             $database->update("t_winner",["showing" => 1],"1");

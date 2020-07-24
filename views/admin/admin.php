@@ -112,10 +112,10 @@
         <tbody>
             <td>
                 <span ng-bind="wallet">Loading ...</span> <br>
-                <button data-toggle="modal" data-target="#sendMoney1"  class="btn btn-outline-warning btn-sm">Send</button></td>
+                <!-- <button data-toggle="modal" data-target="#sendMoney1"  class="btn btn-outline-warning btn-sm">Send</button></td> -->
             <td>
                 <span ng-bind="profit">Loading ...</span> <br> 
-                <button data-toggle="modal" data-target="#sendMoney2"  class="btn btn-outline-warning btn-sm">Send</button></td>
+                <!-- <button data-toggle="modal" data-target="#sendMoney2"  class="btn btn-outline-warning btn-sm">Send</button></td>-->
             </td>
         </tbody>
     </table>

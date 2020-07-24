@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../assets/sweetalert2/dist/sweetalert2.css">
     <style>
         .lds-facebook {
   position: absolute;
@@ -100,7 +101,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="../../index.php" ng-disabled="balanceValue == 0 || !amountWith" class="btn btn-primary" ng-click="withdrawal('<?php echo $_SESSION['user_loggeg']['id']; ?>',amountWith)" data-dismiss="modal">Save changes</a>
+                <a href="../../index.php" ng-disabled="balanceValue == 0 || !amountWith" class="btn btn-primary" ng-click="withdrawal('<?php echo $_SESSION['user_loggeg']['id']; ?>',amountWith)" data-dismiss="modal">Ok</a>
             </div>
             </div>
             </div>

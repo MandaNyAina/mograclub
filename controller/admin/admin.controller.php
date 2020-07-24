@@ -1,15 +1,14 @@
 <?php 
     require '../../config/constant.php';
     if ($_GET['form'] == "reset") {
-        if (is_form_valid($_POST['password']) && is_form_valid($_POST['defaultPay'])) {
+        if (is_form_valid($_POST['password'])) {
             $data = [
                 "password" => password_encrypt($_POST['password'])
             ];
             $database->update("t_user",$data,"type='ADMIN'");
-            $database->update("t_params",["defaults" => $_POST['defaultPay']],"id=1");
             echo '<script>alert("Success")</script>';
         } else {
-            echo '<script>alert("Password and payement default is require")</script>';
+            echo '<script>alert("Password is require")</script>';
         }
     } else if ($_GET['form'] == "paypal") {
         if (is_form_valid($_POST['paypalMail']) && is_form_valid($_POST['paypalPassword'])) {

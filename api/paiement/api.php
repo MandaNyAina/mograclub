@@ -45,7 +45,7 @@
             $token = $this->createToken();
             $ch = curl_init();
             $header = array(
-                'Authorization: '.$token
+                'Authorization: '.$token['data']['token']
             );
             curl_setopt_array($ch, [
                 CURLOPT_URL => ENV_LINK."/payout/v1/".$endPoint,
@@ -56,7 +56,11 @@
             ]);
             $response = json_decode(curl_exec($ch), true);
             curl_close($ch);
-            return $response;
+            $res = [
+                "token_reponse" => $token,
+                "api response" => $response
+            ];
+            return $res;
         }
 
         private function generateSignature ($postData) {
@@ -86,7 +90,7 @@
             ]);
             $response = json_decode(curl_exec($ch), true);
             curl_close($ch);
-            return $response['data']['token'];
+            return $response;
         }
 
         public static function getSignature() {

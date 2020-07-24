@@ -46,9 +46,9 @@ function time_out () {
 app.filter('isWin', function () {
     return function (x) {
         if (x == 0) {
-            return "Lose"
+            return "Lost"
         } else {
-            return "Win"
+            return "Won"
         }
     }
 })
@@ -210,14 +210,14 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
             appService.checkPlaying(data.id, data.groups).then(
                 (res) => {
                     if (res.data == "ok") {
-                        if ($scope.balanceValue > amount) {
+                        if ($scope.balanceValue >= amount) {
                             // the service fee here
                             if (amount < 50) {
                                 amount = amount - 1;
-                                appService.sendServiceFee(1);
+                                appService.sendServiceFee(1, data.id);
                             } else {
                                 amount = amount - 2;
-                                appService.sendServiceFee(2);
+                                appService.sendServiceFee(2, data.id);
                             }
                             data.amount = amount;
                             appService.sendOrdering(data.id, data).then(
@@ -541,8 +541,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                     }
                     appService.validateOrdering(res.data, data).then(
                         (res) => {
-                            // console.log(res)
-                            if (res.data == "win") {
+                            if (res.data.includes("win")) {
                                 Swal.fire({
                                     position: 'top-end',
                                     icon: 'error',
@@ -677,7 +676,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
         let timerInterval
         Swal.fire({
         html: 'Wait please',
-        timer: 5000,
+        timer: 4500,
         timerProgressBar: true,
         onBeforeOpen: () => {
             Swal.showLoading()
@@ -1294,42 +1293,52 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
             (res) => { 
                 console.log(res)
                 $scope.senderLoader = false;
-                if (res.data == "SUCCESS") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        text: 'Your request is done with success',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    $scope.change = ""
-                    window.location.href = "../../index.php"
-                    recharge()
-                } else if (res.data == "ERROR") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        text: 'Error when withdrawal, verify your bank account',
-                        showConfirmButton: false,
-                        timer: 5000
-                    })
-                } else if (res.data == "PENDING") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        text: 'The request is getting processed',
-                        showConfirmButton: false,
-                        timer: 5000
-                    })
-                } else if (res.data == "FAILED") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        text: 'Error when withdrawal, contact the seller support at service@mogra.club',
-                        showConfirmButton: false,
-                        timer: 5000
-                    })
-                }
+                let rep =JSON.stringify(res.data)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    text: rep,
+                    showConfirmButton: false,
+                    timer: 15000
+                })
+
+                $scope.amountWith = ""
+                // if (res.data == "SUCCESS") {
+                //     Swal.fire({
+                //         position: 'top-end',
+                //         icon: 'success',
+                //         text: 'Your request is done with success',
+                //         showConfirmButton: false,
+                //         timer: 1500
+                //     })
+                //     $scope.change = ""
+                //     window.location.href = "../../index.php"
+                //     recharge()
+                // } else if (res.data == "ERROR") {
+                //     Swal.fire({
+                //         position: 'top-end',
+                //         icon: 'error',
+                //         text: 'Error when withdrawal, verify your bank account',
+                //         showConfirmButton: false,
+                //         timer: 5000
+                //     })
+                // } else if (res.data == "PENDING") {
+                //     Swal.fire({
+                //         position: 'top-end',
+                //         icon: 'error',
+                //         text: 'The request is getting processed',
+                //         showConfirmButton: false,
+                //         timer: 5000
+                //     })
+                // } else if (res.data == "FAILED") {
+                //     Swal.fire({
+                //         position: 'top-end',
+                //         icon: 'error',
+                //         text: 'Error when withdrawal, contact the seller support at service@mogra.club',
+                //         showConfirmButton: false,
+                //         timer: 5000
+                //     })
+                // }
             }
         )
     }
