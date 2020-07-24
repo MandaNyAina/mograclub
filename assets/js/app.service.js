@@ -1,8 +1,8 @@
 import {app} from '../js/app.module.js';
 
 const key = "SFkqSL99qLk9SSeYL9kqeS9L3eS99q39"
-const host_protocole = "http://"
-const host_server = "localhost:8000"
+const host_protocole = "https://"
+const host_server = "mogra.club"
 
 app.service('userService', function ($http) {
     this.activeProme = (id) => {

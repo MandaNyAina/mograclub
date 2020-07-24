@@ -27,30 +27,34 @@
         $date = date("Y-m-d H:i:s");
         $x = $getBalance - $value - $y - $cashfreeFee;
         if ($x > 0) {
-            $data['amount'] = $amount;
-            $withdrawal = $payment->api("requestTransfer",$data);
-            if ($withdrawal['api response']['status'] == "SUCCESS") {
-                $database->update("t_user_params",["balance" => $x],"id_user='$id'");
-                $data = [
-                    "id_user" => $id,
-                    "price" => $value,
-                    "type" => "withdrawal",
-                    "date" => $date
-                ];
-                $database->insert("t_recharge",$data);
-                $message = "
-                Withdrawal information,
-                the Cashfree service charge is $cashfreeFee rupees and
-                the MograClub service charge is $y rupees,
-                Thanks for you
-                ";
-                echo $message;
+            if ($bankInfo) {
+                $data['amount'] = $amount;
+                $withdrawal = $payment->api("requestTransfer",$data);
+                if ($withdrawal['api response']['status'] == "SUCCESS") {
+                    $database->update("t_user_params",["balance" => $x],"id_user='$id'");
+                    $data = [
+                        "id_user" => $id,
+                        "price" => $value,
+                        "type" => "withdrawal",
+                        "date" => $date
+                    ];
+                    $database->insert("t_recharge",$data);
+                    $message = "
+                    Withdrawal information,
+                    the Cashfree service charge is $cashfreeFee rupees and
+                    the MograClub service charge is $y rupees,
+                    Thanks for you
+                    ";
+                    echo $message;
+                } else {
+                    $reponse = [
+                        "apiResponse" => $withdrawal['api response'],
+                        "tokenResponse" => $withdrawal['token_reponse']
+                    ];
+                    echo json_encode($reponse);
+                }
             } else {
-                $reponse = [
-                    "apiResponse" => $withdrawal['api response'],
-                    "tokenResponse" => $withdrawal['token_reponse']
-                ];
-                echo json_encode($reponse);
+                echo "Your bank is not set";
             }
         } else {
             echo "The withdrawal amount error, balance low";
