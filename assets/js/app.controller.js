@@ -1291,54 +1291,17 @@ app.controller("walletCtrl", ($scope, convertService, userService) => {
         $scope.senderLoader = true;
         convertService.withdrawal(id,e).then(
             (res) => { 
-                console.log(res)
+                let status = res.data.status.toLowerCase();
                 $scope.senderLoader = false;
-                let rep =JSON.stringify(res.data)
                 Swal.fire({
                     position: 'top-end',
-                    icon: 'success',
-                    text: rep,
+                    icon: status,
+                    text: res.data.message,
                     showConfirmButton: false,
                     timer: 15000
                 })
 
                 $scope.amountWith = ""
-                // if (res.data == "SUCCESS") {
-                //     Swal.fire({
-                //         position: 'top-end',
-                //         icon: 'success',
-                //         text: 'Your request is done with success',
-                //         showConfirmButton: false,
-                //         timer: 1500
-                //     })
-                //     $scope.change = ""
-                //     window.location.href = "../../index.php"
-                //     recharge()
-                // } else if (res.data == "ERROR") {
-                //     Swal.fire({
-                //         position: 'top-end',
-                //         icon: 'error',
-                //         text: 'Error when withdrawal, verify your bank account',
-                //         showConfirmButton: false,
-                //         timer: 5000
-                //     })
-                // } else if (res.data == "PENDING") {
-                //     Swal.fire({
-                //         position: 'top-end',
-                //         icon: 'error',
-                //         text: 'The request is getting processed',
-                //         showConfirmButton: false,
-                //         timer: 5000
-                //     })
-                // } else if (res.data == "FAILED") {
-                //     Swal.fire({
-                //         position: 'top-end',
-                //         icon: 'error',
-                //         text: 'Error when withdrawal, contact the seller support at service@mogra.club',
-                //         showConfirmButton: false,
-                //         timer: 5000
-                //     })
-                // }
             }
         )
     }
@@ -1437,7 +1400,7 @@ app.controller("promotionCtrl", ($scope, appService, userService) => {
                 )
             }
         )
-    }, 500)
+    }, 1000)
     // $scope.convert = (data) => {
     //     userService.getIdLogged().then(
     //         (res) => {

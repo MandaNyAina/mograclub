@@ -28,7 +28,7 @@
             $response = [];
             $date = date("Y-m-d H:i:s");
             $x = $getBalance - $value - $y - $cashfreeFee;
-            if (!$bankInfo) {
+            if ($bankInfo) {
                 $data['amount'] = $amount;
                 $withdrawal = $payment->api("requestTransfer",$data);
                 $rep = "withdrawing ".date("d-m-Y H:i:s")." :: ".json_encode($withdrawal)."\n";
@@ -47,15 +47,31 @@
                     the bank service charge is $cashfreeFee rupees
                     Thanks for you
                     ";
-                    echo $message;
+                    $rep = [
+                        "status" => $withdrawal['api response']['status'],
+                        "message" => $message
+                    ];
+                    echo json_encode($rep);
                 } else {
-                    echo $withdrawal['api response']['message'];
+                    $rep = [
+                        "status" => $withdrawal['api response']['status'],
+                        "message" => $withdrawal['api response']['message']
+                    ];
+                    echo json_encode($rep);
                 }
             } else {
-                echo "Your bank is not set";
+                $rep = [
+                    "status" => "error",
+                    "message" => "Your bank is not set"
+                ];
+                echo json_encode($rep);
             }
         } else {
-            echo "The withdrawal amount error, balance low";
+            $rep = [
+                "status" => "error",
+                "message" => "The withdrawal amount error, balance low"
+            ];
+            echo json_encode($rep);
         }
     } else if (!is_form_valid(@$_GET['key']) || @$_GET['key'] != $key) {
         echo "Unauthorized";

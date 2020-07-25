@@ -23,6 +23,7 @@
                 <div ng-if="nbrComplaint != 0" class="bg-danger" style="width: 18px;height: 18px; display: inline-block;border-radius: 50%;font-size: 12px;" ng-bind="nbrComplaint"></div>
             </a>
             <a class="btn btn-primary btn-sm" href="adminSetting.php"><i class="fas fa-user-cog"></i><span class="menuMaxLength"> Account setting</span></a>
+            <a class="btn btn-primary btn-sm" href="userList.php"><i class="fa fa-user-circle" aria-hidden="true"></i><span class="menuMaxLength"> User list</span></a>
             <a class="btn btn-secondary btn-sm"  href="../../controller/delog/delog.controller.php"><i class="fas fa-sign-out-alt"></i><span class="menuMaxLength"> Logout</span></a>
         </div>
     </div>

@@ -20,10 +20,9 @@
                 "id_user" => $id
             ];
             $payement = new Payment();
-            $check = $payement->api("validation/bankDetails?name=".$data['name']."&phone=".$data['phone']."&bankAccount=".$data['bankAccount']."&ifsc=".$data['ifsc']."",$data);
+            $check = $payement->verficationBank($data);
             $rep = "Checking bank validator ".date("d-m-Y H:i:s")." :: ".json_encode($check)."\n";
             fwrite($file, $rep);
-            $file;
             if ($check['api response']['status'] == "SUCCESS") {
                 $addBenificiary = $payement->api("addBeneficiary",$data);
                 $rep = "Add beneficiary ".date("d-m-Y H:i:s")." :: ".json_encode($addBenificiary)."\n";
@@ -32,11 +31,11 @@
                     $database->insert("t_user_bank",$data);
                     header("Location: ../../views/app/app.php#!/bank");
                 } else {
-                    echo "<script>alert('Your bank information is wrong');</script>";
+                    echo "<script>alert('".$addBenificiary['api response']['message']."');</script>";
                     echo '<meta http-equiv="refresh" content="0; ../../views/app/app.php#!/bank">';
                 }
             } else {
-                echo "<script>alert('Your bank information is wrong');</script>";
+                echo "<script>alert('".$addBenificiary['api response']['message']."');</script>";
                 echo '<meta http-equiv="refresh" content="0; ../../views/app/app.php#!/bank">';
             }
         } else if ($_GET['type'] == 'update') {
@@ -47,7 +46,6 @@
                 "phone" => clearString($_POST['mobile']),
                 "bankAccount" => clearString($_POST['numberAcc']),
                 "ifsc" => clearString($_POST['ifcs']),
-                "vpa" => clearString($_POST['vpa']),
                 "address1" => clearString($_POST['address']),
                 "city" => clearString($_POST['city']),
                 "state" => clearString($_POST['state'])
@@ -55,7 +53,7 @@
             
             $payement = new Payment();
             
-            $check = $payement->verficationBank("name=".$data['name']."&phone=".$data['phone']."&bankAccount=".$data['bankAccount']."&ifsc=".$data['ifsc']."");
+            $check = $payement->verficationBank($data);
             $rep = "Checking bank validator ".date("d-m-Y H:i:s")." :: ".json_encode($check)."\n";
             fwrite($file, $rep);
             if ($check['api response']['status'] == "SUCCESS") {
@@ -66,11 +64,11 @@
                     $database->update("t_user_bank",$data,"id_user='$id'");
                     header("Location: ../../views/app/app.php#!/bank");
                 } else {
-                    echo "<script>alert('Your bank information is wrong');</script>";
+                    echo "<script>alert('".$addBenificiary['api response']['message']."');</script>";
                     echo '<meta http-equiv="refresh" content="0; ../../views/app/app.php#!/bank">';
                 }
             } else {
-                echo "<script>alert('Your bank information is wrong');</script>";
+                echo "<script>alert('".$check['api response']['message']."');</script>";
                 echo '<meta http-equiv="refresh" content="0; ../../views/app/app.php#!/bank">';
             }
         }

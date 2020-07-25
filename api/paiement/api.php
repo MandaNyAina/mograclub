@@ -39,26 +39,28 @@
             <?php
         }
 
-        public function verficationBank ($query) {
-            $c = curl_init();
+        public function verficationBank ($data) {
+            $all = [
+                "bulkValidationId" => date("Y").time(),
+                "entries" => [$data]
+            ];
             $token = $this->createToken();
+            $ch = curl_init();
             $header = array(
-                'Authorization: '.@$token['data']['token'],
+                'Authorization: Bearer '.$token['data']['token'],
                 'Content-Type: application/json'
             );
-            curl_setopt($c, CURLOPT_URL, ENV_LINK."/payout/v1/asyncValidation/bankDetails?".$query);
-            curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($c, CURLOPT_HTTPHEADER, $header);
-            $output = curl_exec($c);
-            if($output === false) {
-                trigger_error('Erreur curl : '.curl_error($c),E_USER_WARNING);
-            } else {
-                $res = [
-                    "token_reponse" => $token,
-                    "api response" => $output
-                ];
-            }
-            curl_close($c);
+            curl_setopt_array($ch, [
+                CURLOPT_URL => ENV_LINK."/payout/v1/validation/bankDetails?name=John&phone=9876543210&bankAccount=026291800001191&ifsc=YESB0000262",
+                CURLOPT_HTTPHEADER => $header,
+                CURLOPT_RETURNTRANSFER => true
+            ]);
+            $response = json_decode(curl_exec($ch), true);
+            curl_close($ch);
+            $res = [
+                "token_reponse" => $token,
+                "api response" => $response
+            ];
             return $res;
         }
 
@@ -68,7 +70,7 @@
             $token = $this->createToken();
             $ch = curl_init();
             $header = array(
-                'Authorization: '.@$token['data']['token'],
+                'Authorization: Bearer '.$token['data']['token'],
                 'Content-Type: application/json'
             );
             curl_setopt_array($ch, [
@@ -76,7 +78,7 @@
                 CURLOPT_HTTPHEADER => $header,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-                CURLOPT_POSTFIELDS => http_build_query($data)
+                CURLOPT_POSTFIELDS => json_encode($data)
             ]);
             $response = json_decode(curl_exec($ch), true);
             curl_close($ch);
