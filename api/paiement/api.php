@@ -45,7 +45,8 @@
             $token = $this->createToken();
             $ch = curl_init();
             $header = array(
-                'Authorization: '.@$token['data']['token']
+                'Authorization: '.@$token['data']['token'],
+                'Content-Type: application/json'
             );
             curl_setopt_array($ch, [
                 CURLOPT_URL => ENV_LINK."/payout/v1/".$endPoint,
@@ -79,7 +80,8 @@
             $ch = curl_init();
             $header = array(
                 'X-Client-Id: '.CLIENT_ID, 
-                'X-Client-Secret: '.CLIENT_SECRET
+                'X-Client-Secret: '.CLIENT_SECRET,
+                'X-Cf-Signature: '.$this->getSignature()
             );
             curl_setopt_array($ch, [
                 CURLOPT_URL => ENV_LINK."/payout/v1/authorize",
