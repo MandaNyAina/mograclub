@@ -45,7 +45,7 @@
             $token = $this->createToken();
             $ch = curl_init();
             $header = array(
-                'Authorization: '.$token['data']['token']
+                'Authorization: '.@$token['data']['token']
             );
             curl_setopt_array($ch, [
                 CURLOPT_URL => ENV_LINK."/payout/v1/".$endPoint,
