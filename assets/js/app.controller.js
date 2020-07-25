@@ -212,7 +212,7 @@ app.controller('appCtrl', (userService, appService, $scope, $location, $routePar
                     if (res.data == "ok") {
                         if ($scope.balanceValue >= amount) {
                             // the service fee here
-                            if (amount < 50) {
+                            if (amount < 100) {
                                 amount = amount - 1;
                                 appService.sendServiceFee(1, data.id);
                             } else {

@@ -55,7 +55,7 @@
             
             $payement = new Payment();
             
-            $check = $payement->api("validation/bankDetails?name=".$data['name']."&phone=".$data['phone']."&bankAccount=".$data['bankAccount']."&ifsc=".$data['ifsc']."",$data);
+            $check = $payement->verficationBank("name=".$data['name']."&phone=".$data['phone']."&bankAccount=".$data['bankAccount']."&ifsc=".$data['ifsc']."");
             $rep = "Checking bank validator ".date("d-m-Y H:i:s")." :: ".json_encode($check)."\n";
             fwrite($file, $rep);
             if ($check['api response']['status'] == "SUCCESS") {

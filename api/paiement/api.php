@@ -39,6 +39,29 @@
             <?php
         }
 
+        public function verficationBank ($query) {
+            $c = curl_init();
+            $token = $this->createToken();
+            $header = array(
+                'Authorization: '.@$token['data']['token'],
+                'Content-Type: application/json'
+            );
+            curl_setopt($c, CURLOPT_URL, ENV_LINK."/payout/v1/asyncValidation/bankDetails?".$query);
+            curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($c, CURLOPT_HTTPHEADER, $header);
+            $output = curl_exec($c);
+            if($output === false) {
+                trigger_error('Erreur curl : '.curl_error($c),E_USER_WARNING);
+            } else {
+                $res = [
+                    "token_reponse" => $token,
+                    "api response" => $output
+                ];
+            }
+            curl_close($c);
+            return $res;
+        }
+
         public function api ($endPoint, $data) {
             // $data['clientId'] = CLIENT_ID;
             // $data['secretId'] = CLIENT_SECRET;
